@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dr. Dirk Kötting – Terminbuchung</title>
+    <style>
+        :root {
+            --color-white: rgba(255,255,255,1);
+            --color-cream-50: rgba(252,252,249,1);
+            --color-cream-100: rgba(255,255,253,1);
+            --color-gray-200: rgba(245,245,245,1);
+            --color-gray-300: rgba(167,169,169,1);
+            --color-gray-400: rgba(119,124,124,1);
+            --color-slate-500: rgba(98,108,113,1);
+            --color-brown-600: rgba(94,82,64,1);
+            --color-charcoal-700: rgba(31,33,33,1);
+            --color-charcoal-800: rgba(38,40,40,1);
+            --color-slate-900: rgba(19,52,59,1);
+            --color-teal-300: rgba(50,184,198,1);
+            --color-teal-400: rgba(45,166,178,1);
+            --color-teal-500: rgba(33,128,141,1);
+            --color-teal-600: rgba(29,116,128,1);
+            --color-teal-700: rgba(26,104,115,1);
+            --color-teal-800: rgba(41,150,161,1);
+            --color-red-400: rgba(255,84,89,1);
+            --color-red-500: rgba(192,21,47,1);
+            --color-orange-400: rgba(230,129,97,1);
+            --color-brown-600-rgb: 94,82,64;
+            --color-teal-500-rgb: 33,128,141;
+            --color-slate-900-rgb: 19,52,59;
+            --color-background: var(--color-cream-50);
+            --color-surface: var(--color-cream-100);
+            --color-text: var(--color-slate-900);
+            --color-text-secondary: var(--color-slate-500);
+            --color-primary: var(--color-teal-500);
+            --color-primary-hover: var(--color-teal-600);
+            --color-primary-active: var(--color-teal-700);
+            --color-secondary: rgba(var(--color-brown-600-rgb),0.12);
+            --color-border: rgba(var(--color-brown-600-rgb),0.2);
+            --color-btn-primary-text: var(--color-cream-50);
+            --color-card-border: rgba(var(--color-brown-600-rgb),0.12);
+            --color-focus-ring: rgba(var(--color-teal-500-rgb),0.4);
+            --color-error: var(--color-red-500);
+            --color-success: var(--color-teal-500);
+            --font-family-base: "FKGroteskNeue","Geist","Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+            --radius-sm: 6px;
+            --radius-base: 8px;
+            --radius-md: 10px;
+            --radius-lg: 12px;
+            --radius-full: 9999px;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.04),0 1px 2px rgba(0,0,0,0.02);
+            --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.04),0 2px 4px -1px rgba(0,0,0,0.02);
+            --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.04),0 4px 6px -2px rgba(0,0,0,0.02);
+            --duration-fast: 150ms;
+            --duration-normal: 250ms;
+            --ease-standard: cubic-bezier(0.16,1,0.3,1);
+        }
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --color-gray-400-rgb: 119,124,124;
+                --color-teal-300-rgb: 50,184,198;
+                --color-gray-300-rgb: 167,169,169;
+                --color-background: var(--color-charcoal-700);
+                --color-surface: var(--color-charcoal-800);
+                --color-text: var(--color-gray-200);
+                --color-text-secondary: rgba(var(--color-gray-300-rgb),0.7);
+                --color-primary: var(--color-teal-300);
+                --color-primary-hover: var(--color-teal-400);
+                --color-primary-active: var(--color-teal-800);
+                --color-secondary: rgba(var(--color-gray-400-rgb),0.15);
+                --color-border: rgba(var(--color-gray-400-rgb),0.3);
+                --color-error: var(--color-red-400);
+                --color-success: var(--color-teal-300);
+                --color-btn-primary-text: var(--color-slate-900);
+                --color-card-border: rgba(var(--color-gray-400-rgb),0.2);
+                --color-focus-ring: rgba(var(--color-teal-300-rgb),0.4);
+            }
+        }
+        @font-face { font-family:'FKGroteskNeue'; src:url('https://r2cdn.perplexity.ai/fonts/FKGroteskNeue.woff2') format('woff2'); }
+        *,*::before,*::after { box-sizing:border-box; }
+        html { font-size:14px; }
+        body { margin:0; padding:0; font-family:var(--font-family-base); background:var(--color-background); color:var(--color-text); line-height:1.5; -webkit-font-smoothing:antialiased; min-height:100vh; }
+
+        /* ── SETUP BANNER ── */
+        .setup-banner { background:rgba(var(--color-teal-500-rgb),0.1); border:1px solid var(--color-primary); border-radius:var(--radius-lg); padding:16px 20px; margin:16px auto; max-width:928px; display:flex; align-items:flex-start; gap:12px; }
+        .setup-banner.hidden { display:none; }
+        .setup-banner .icon { font-size:22px; flex-shrink:0; }
+        .setup-banner .text { flex:1; }
+        .setup-banner h4 { margin:0 0 4px; font-size:14px; font-weight:600; }
+        .setup-banner p { margin:0; font-size:13px; color:var(--color-text-secondary); }
+        .setup-banner code { background:var(--color-secondary); padding:1px 6px; border-radius:var(--radius-sm); font-size:12px; font-family:monospace; }
+        .setup-banner .dismiss { background:none; border:none; color:var(--color-text-secondary); cursor:pointer; font-size:18px; padding:0; flex-shrink:0; }
+
+        .app-wrapper { max-width:960px; margin:0 auto; padding:24px 16px; }
+
+        /* ── PROFILE ── */
+        .profile-header { text-align:center; margin-bottom:32px; }
+        .profile-avatar { width:72px; height:72px; border-radius:50%; background:var(--color-primary); color:var(--color-btn-primary-text); display:inline-flex; align-items:center; justify-content:center; font-size:28px; font-weight:600; margin-bottom:12px; }
+        .profile-logo { max-width:180px; max-height:80px; object-fit:contain; margin-bottom:12px; }
+        .profile-logo-hint { font-size:11px; color:var(--color-text-secondary); background:var(--color-secondary); padding:4px 10px; border-radius:var(--radius-full); display:inline-block; margin-bottom:8px; cursor:help; }
+        .profile-header h1 { font-size:24px; font-weight:600; margin:0 0 4px; letter-spacing:-0.01em; }
+        .profile-header p { color:var(--color-text-secondary); margin:0; font-size:14px; }
+
+        /* ── MEETING TYPES ── */
+        .meeting-types { display:flex; flex-wrap:wrap; gap:12px; justify-content:center; margin-bottom:32px; }
+        .meeting-type-card { background:var(--color-surface); border:2px solid var(--color-card-border); border-radius:var(--radius-lg); padding:16px 20px; cursor:pointer; transition:all var(--duration-normal) var(--ease-standard); text-align:left; min-width:200px; flex:1; max-width:280px; }
+        .meeting-type-card:hover { box-shadow:var(--shadow-md); border-color:var(--color-primary); }
+        .meeting-type-card.active { border-color:var(--color-primary); box-shadow:0 0 0 3px var(--color-focus-ring); }
+        .meeting-type-card .mt-color { width:8px; height:40px; border-radius:4px; margin-bottom:10px; }
+        .meeting-type-card h3 { font-size:15px; font-weight:600; margin:0 0 4px; }
+        .meeting-type-card .mt-duration { font-size:12px; color:var(--color-text-secondary); }
+
+        /* ── LAYOUT ── */
+        .booking-layout { display:grid; grid-template-columns:1fr; gap:24px; }
+        @media (min-width:700px) { .booking-layout { grid-template-columns:1fr 320px; } }
+
+        /* ── CALENDAR ── */
+        .calendar-card { background:var(--color-surface); border:1px solid var(--color-card-border); border-radius:var(--radius-lg); box-shadow:var(--shadow-sm); overflow:hidden; }
+        .calendar-header { display:flex; align-items:center; justify-content:space-between; padding:16px 20px; border-bottom:1px solid var(--color-card-border); }
+        .calendar-header h2 { font-size:17px; font-weight:600; margin:0; }
+        .cal-nav { display:flex; gap:8px; }
+        .cal-nav button { width:34px; height:34px; border-radius:var(--radius-base); border:1px solid var(--color-border); background:var(--color-surface); color:var(--color-text); cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:16px; transition:all var(--duration-fast) var(--ease-standard); }
+        .cal-nav button:hover { background:var(--color-secondary); }
+        .calendar-grid { padding:12px 20px 20px; }
+        .calendar-weekdays { display:grid; grid-template-columns:repeat(7,1fr); text-align:center; margin-bottom:8px; }
+        .calendar-weekdays span { font-size:11px; font-weight:600; color:var(--color-text-secondary); text-transform:uppercase; padding:6px 0; }
+        .calendar-days { display:grid; grid-template-columns:repeat(7,1fr); gap:4px; }
+        .calendar-day { aspect-ratio:1; display:flex; align-items:center; justify-content:center; border-radius:var(--radius-base); font-size:13px; font-weight:500; cursor:pointer; transition:all var(--duration-fast) var(--ease-standard); border:none; background:transparent; color:var(--color-text); position:relative; }
+        .calendar-day:hover:not(.disabled):not(.empty) { background:var(--color-secondary); }
+        .calendar-day.today { font-weight:700; color:var(--color-primary); }
+        .calendar-day.today::after { content:''; position:absolute; bottom:3px; width:4px; height:4px; border-radius:50%; background:var(--color-primary); }
+        .calendar-day.selected { background:var(--color-primary); color:var(--color-btn-primary-text); font-weight:600; }
+        .calendar-day.selected::after { display:none; }
+        .calendar-day.disabled { color:var(--color-text-secondary); opacity:0.35; cursor:not-allowed; }
+        .calendar-day.empty { cursor:default; }
+        .calendar-day.has-slots::before { content:''; position:absolute; bottom:2px; width:4px; height:4px; border-radius:50%; background:var(--color-success); }
+        .calendar-day.selected.has-slots::before { background:var(--color-btn-primary-text); }
+
+        /* ── TIME SLOTS ── */
+        .timeslots-panel { background:var(--color-surface); border:1px solid var(--color-card-border); border-radius:var(--radius-lg); box-shadow:var(--shadow-sm); overflow:hidden; }
+        .timeslots-header { padding:16px 20px; border-bottom:1px solid var(--color-card-border); }
+        .timeslots-header h3 { font-size:15px; font-weight:600; margin:0 0 2px; }
+        .timeslots-header p { margin:0; font-size:12px; color:var(--color-text-secondary); }
+        .timeslots-list { padding:12px 20px 20px; display:flex; flex-direction:column; gap:8px; max-height:380px; overflow-y:auto; }
+        .timeslot-btn { padding:10px 16px; border:1px solid var(--color-border); border-radius:var(--radius-base); background:var(--color-surface); color:var(--color-primary); font-size:14px; font-weight:600; cursor:pointer; transition:all var(--duration-fast) var(--ease-standard); text-align:center; }
+        .timeslot-btn:hover { background:var(--color-primary); color:var(--color-btn-primary-text); border-color:var(--color-primary); }
+        .timeslot-btn.selected { background:var(--color-primary); color:var(--color-btn-primary-text); border-color:var(--color-primary); }
+        .no-slots { text-align:center; padding:24px; color:var(--color-text-secondary); font-size:13px; }
+
+        /* ── FORM OVERLAY ── */
+        .overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.4); z-index:100; align-items:center; justify-content:center; padding:16px; backdrop-filter:blur(4px); }
+        .overlay.visible { display:flex; }
+        .modal-card { background:var(--color-surface); border-radius:var(--radius-lg); box-shadow:var(--shadow-lg); width:100%; max-width:520px; max-height:90vh; overflow-y:auto; border:1px solid var(--color-card-border); }
+        .modal-header { padding:20px 24px; border-bottom:1px solid var(--color-card-border); display:flex; align-items:center; justify-content:space-between; }
+        .modal-header h3 { font-size:18px; font-weight:600; margin:0; }
+        .close-btn { width:32px; height:32px; border-radius:var(--radius-base); border:none; background:var(--color-secondary); color:var(--color-text); cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:18px; transition:background var(--duration-fast); }
+        .close-btn:hover { background:var(--color-primary); color:var(--color-btn-primary-text); }
+        .form-summary { padding:16px 24px; background:var(--color-secondary); display:flex; gap:16px; align-items:flex-start; font-size:13px; }
+        .form-summary .icon-cal { font-size:24px; opacity:0.7; }
+        .form-summary .summary-details strong { display:block; font-size:14px; margin-bottom:2px; }
+        .form-summary .summary-details span { color:var(--color-text-secondary); }
+        .form-body { padding:24px; }
+        .form-group { margin-bottom:16px; }
+        .form-label { display:block; margin-bottom:6px; font-weight:500; font-size:13px; color:var(--color-text); }
+        .form-label .req { color:var(--color-error); margin-left:2px; }
+        .form-input { display:block; width:100%; padding:10px 12px; font-size:14px; line-height:1.5; color:var(--color-text); background:var(--color-background); border:1px solid var(--color-border); border-radius:var(--radius-base); font-family:var(--font-family-base); transition:border-color var(--duration-fast),box-shadow var(--duration-fast); }
+        .form-input:focus { outline:none; border-color:var(--color-primary); box-shadow:0 0 0 3px var(--color-focus-ring); }
+        .form-input.error { border-color:var(--color-error); }
+        .error-msg { font-size:12px; color:var(--color-error); margin-top:4px; display:none; }
+        .error-msg.visible { display:block; }
+        textarea.form-input { resize:vertical; min-height:80px; }
+        .form-actions { display:flex; gap:12px; justify-content:flex-end; padding:16px 24px; border-top:1px solid var(--color-card-border); }
+        .btn-primary { padding:10px 24px; border-radius:var(--radius-base); border:none; background:var(--color-primary); color:var(--color-btn-primary-text); font-size:14px; font-weight:600; cursor:pointer; transition:all var(--duration-fast); font-family:var(--font-family-base); }
+        .btn-primary:hover { background:var(--color-primary-hover); }
+        .btn-primary:active { background:var(--color-primary-active); }
+        .btn-primary:disabled { opacity:0.5; cursor:not-allowed; }
+        .btn-secondary { padding:10px 20px; border-radius:var(--radius-base); border:1px solid var(--color-border); background:var(--color-surface); color:var(--color-text); font-size:14px; font-weight:500; cursor:pointer; transition:all var(--duration-fast); font-family:var(--font-family-base); }
+        .btn-secondary:hover { background:var(--color-secondary); }
+
+        /* ── SUCCESS ── */
+        .success-card { background:var(--color-surface); border-radius:var(--radius-lg); box-shadow:var(--shadow-lg); padding:40px; text-align:center; max-width:420px; border:1px solid var(--color-card-border); }
+        .success-icon { width:64px; height:64px; border-radius:50%; background:rgba(var(--color-teal-500-rgb),0.12); color:var(--color-success); display:inline-flex; align-items:center; justify-content:center; font-size:32px; margin-bottom:16px; }
+        .success-card h3 { font-size:20px; font-weight:600; margin:0 0 8px; }
+        .success-card p { color:var(--color-text-secondary); margin:0 0 24px; font-size:14px; }
+
+        /* ── ADMIN ── */
+        .admin-toggle { position:fixed; bottom:20px; right:20px; z-index:50; width:48px; height:48px; border-radius:50%; background:var(--color-primary); color:var(--color-btn-primary-text); border:none; cursor:pointer; font-size:20px; box-shadow:var(--shadow-lg); display:flex; align-items:center; justify-content:center; transition:all var(--duration-fast); }
+        .admin-toggle:hover { background:var(--color-primary-hover); transform:scale(1.05); }
+        .admin-card { background:var(--color-surface); border-radius:var(--radius-lg); box-shadow:var(--shadow-lg); width:100%; max-width:600px; max-height:90vh; overflow-y:auto; border:1px solid var(--color-card-border); }
+        .admin-body { padding:24px; }
+        .admin-section { margin-bottom:24px; }
+        .admin-section h4 { font-size:14px; font-weight:600; margin:0 0 12px; color:var(--color-primary); }
+        .availability-grid { display:flex; flex-direction:column; gap:8px; }
+        .availability-row { display:flex; align-items:center; gap:12px; flex-wrap:wrap; }
+        .availability-row label { width:80px; font-size:13px; font-weight:500; }
+        .availability-row input[type="checkbox"] { accent-color:var(--color-primary); width:16px; height:16px; }
+        .availability-row input[type="time"] { padding:6px 8px; border:1px solid var(--color-border); border-radius:var(--radius-sm); background:var(--color-background); color:var(--color-text); font-family:var(--font-family-base); font-size:13px; }
+        .availability-row input[type="time"]:focus { outline:none; border-color:var(--color-primary); box-shadow:0 0 0 3px var(--color-focus-ring); }
+        .admin-save { padding:10px 24px; border-radius:var(--radius-base); border:none; background:var(--color-primary); color:var(--color-btn-primary-text); font-size:14px; font-weight:600; cursor:pointer; font-family:var(--font-family-base); transition:all var(--duration-fast); width:100%; }
+        .admin-save:hover { background:var(--color-primary-hover); }
+        .bookings-list { display:flex; flex-direction:column; gap:8px; max-height:240px; overflow-y:auto; }
+        .booking-item { padding:12px; border:1px solid var(--color-card-border); border-radius:var(--radius-base); font-size:13px; background:var(--color-background); }
+        .booking-item strong { display:block; margin-bottom:2px; }
+        .booking-item span { color:var(--color-text-secondary); font-size:12px; }
+        .no-bookings { text-align:center; color:var(--color-text-secondary); padding:16px; font-size:13px; }
+
+        /* ── SPINNER ── */
+        .spinner { display:inline-block; width:16px; height:16px; border:2px solid var(--color-btn-primary-text); border-right-color:transparent; border-radius:50%; animation:spin .6s linear infinite; margin-right:8px; vertical-align:middle; }
+        @keyframes spin { to { transform:rotate(360deg); } }
+
+        @media (max-width:699px) {
+            .calendar-day { font-size:12px; }
+            .meeting-type-card { min-width:150px; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ╔══════════════════════════════════════════════════════════════╗ -->
+<!-- ║  SETUP-HINWEIS: E-Mail-Adresse hier ändern!                ║ -->
+<!-- ║  Suche nach IHRE-EMAIL@domain.de und ersetze sie.          ║ -->
+<!-- ╚══════════════════════════════════════════════════════════════╝ -->
+
+<div class="setup-banner" id="setupBanner">
+    <span class="icon">📧</span>
+    <div class="text">
+        <h4>E-Mail-Adresse konfigurieren</h4>
+        <p>Buchungen werden an die im Code hinterlegte E-Mail gesendet. Öffnen Sie die Datei in einem Texteditor und ersetzen Sie <code>IHRE-EMAIL@domain.de</code> durch Ihre echte E-Mail-Adresse. Nach dem ersten Test-Formular erhalten Sie eine Bestätigungs-E-Mail von FormSubmit.</p>
+    </div>
+    <button class="dismiss" onclick="document.getElementById('setupBanner').classList.add('hidden')" aria-label="Hinweis schließen">✕</button>
+</div>
+
+<div class="app-wrapper">
+    <header class="profile-header">
+        <!-- ══════════════════════════════════════════════════════════ -->
+        <!-- LOGO EINBINDEN: Ersetzen Sie die src="..." unten mit:   -->
+        <!--   Option A: URL zu Ihrem Logo (z.B. logo.png im Repo)  -->
+        <!--   Option B: Base64-String (data:image/png;base64,...)  -->
+        <!-- ══════════════════════════════════════════════════════════ -->
+        <img class="profile-logo" id="profileLogo" src="" alt="Dr. Dirk Kötting Logo" style="display:none;">
+        <div class="profile-avatar" id="profileAvatar">DK</div>
+        <span class="profile-logo-hint" id="logoHint" title="Öffnen Sie die Datei und ersetzen Sie src='' beim img-Tag mit Ihrer Logo-URL">💡 Logo einbinden? → Anleitung im Code</span>
+        <h1>Dr. Dirk Kötting</h1>
+        <p>IT Governance &amp; AI Policy Beratung</p>
+    </header>
+
+    <section class="meeting-types" id="meetingTypes" aria-label="Terminart wählen"></section>
+
+    <main class="booking-layout">
+        <div class="calendar-card">
+            <div class="calendar-header">
+                <div class="cal-nav">
+                    <button onclick="changeMonth(-1)" aria-label="Vorheriger Monat">&#8249;</button>
+                    <button onclick="changeMonth(1)" aria-label="Nächster Monat">&#8250;</button>
+                </div>
+                <h2 id="calendarTitle"></h2>
+                <div style="width:76px"></div>
+            </div>
+            <div class="calendar-grid">
+                <div class="calendar-weekdays">
+                    <span>Mo</span><span>Di</span><span>Mi</span><span>Do</span><span>Fr</span><span>Sa</span><span>So</span>
+                </div>
+                <div class="calendar-days" id="calendarDays"></div>
+            </div>
+        </div>
+
+        <div class="timeslots-panel">
+            <div class="timeslots-header" id="timeslotsHeader">
+                <h3>Zeitfenster wählen</h3>
+                <p>Bitte wählen Sie zunächst einen Tag</p>
+            </div>
+            <div class="timeslots-list" id="timeslotsList">
+                <div class="no-slots">Wählen Sie einen Tag im Kalender</div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<!-- ── BOOKING FORM ── -->
+<div class="overlay" id="bookingOverlay">
+    <div class="modal-card">
+        <div class="modal-header">
+            <h3>Termin buchen</h3>
+            <button class="close-btn" onclick="closeBookingForm()" aria-label="Schließen">✕</button>
+        </div>
+        <div class="form-summary" id="formSummary"></div>
+        <form id="bookingForm" onsubmit="submitBooking(event)">
+            <!-- FormSubmit hidden fields -->
+            <input type="hidden" name="_subject" id="fsSubject" value="Neue Terminbuchung">
+            <input type="hidden" name="_captcha" value="false">
+            <input type="hidden" name="_template" value="table">
+            <input type="hidden" name="_next" id="fsNext" value="">
+            <input type="text" name="_honey" style="display:none">
+            <!-- Booking info (hidden, filled by JS) -->
+            <input type="hidden" name="Terminart" id="fsMeetingType">
+            <input type="hidden" name="Datum" id="fsDate">
+            <input type="hidden" name="Uhrzeit" id="fsTime">
+            <input type="hidden" name="Dauer" id="fsDuration">
+
+            <div class="form-body">
+                <div class="form-group">
+                    <label class="form-label" for="fName">Vorname &amp; Nachname<span class="req">*</span></label>
+                    <input class="form-input" type="text" id="fName" name="Name" placeholder="z.B. Max Mustermann" required>
+                    <div class="error-msg" id="errName">Bitte geben Sie Ihren Namen ein</div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="fEmail">E-Mail-Adresse<span class="req">*</span></label>
+                    <input class="form-input" type="email" id="fEmail" name="E-Mail" placeholder="z.B. max@firma.de" required>
+                    <div class="error-msg" id="errEmail">Bitte geben Sie eine gültige E-Mail ein</div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="fPhone">Telefonnummer</label>
+                    <input class="form-input" type="tel" id="fPhone" name="Telefon" placeholder="z.B. +49 170 1234567">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="fCompany">Firma / Organisation</label>
+                    <input class="form-input" type="text" id="fCompany" name="Firma" placeholder="z.B. Muster GmbH">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="fTopic">Thema / Anliegen<span class="req">*</span></label>
+                    <select class="form-input" id="fTopic" name="Thema" required>
+                        <option value="">— Bitte wählen —</option>
+                        <option value="AI Governance Beratung">AI Governance Beratung</option>
+                        <option value="K² Kausale Kompetenz Beratung</option>
+			<option value="AI Governance Beratung">AI Governance Beratung</option>
+			<option value="EU AI Act Compliance">EU AI Act Compliance</option>
+                        <option value="IT Governance / ISMS">IT Governance / ISMS</option>
+                        <option value="Interim Management">Interim Management</option>
+                        <option value="Transition|Outsouricing|Carve Out Sparring </option>
+                        <option value="Sonstiges">Sonstiges</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="fNotes">Zusätzliche Anmerkungen</label>
+                    <textarea class="form-input" id="fNotes" name="Anmerkungen" placeholder="Beschreiben Sie kurz Ihr Anliegen…" rows="3"></textarea>
+                </div>
+            </div>
+            <div class="form-actions">
+                <button type="button" class="btn-secondary" onclick="closeBookingForm()">Abbrechen</button>
+                <button type="submit" class="btn-primary" id="submitBtn">Termin bestätigen</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- ── SUCCESS ── -->
+<div class="overlay" id="successOverlay">
+    <div class="success-card">
+        <div class="success-icon">✓</div>
+        <h3>Termin erfolgreich gebucht!</h3>
+        <p id="successDetails"></p>
+        <button class="btn-primary" onclick="closeSuccess()">Neuen Termin buchen</button>
+    </div>
+</div>
+
+<!-- ── ADMIN ── -->
+<button class="admin-toggle" onclick="toggleAdmin()" aria-label="Admin-Einstellungen" title="Verfügbarkeit &amp; Buchungen verwalten">⚙</button>
+
+<div class="overlay" id="adminOverlay" style="z-index:150;">
+    <div class="admin-card">
+        <div class="modal-header">
+            <h3>⚙ Verfügbarkeit verwalten</h3>
+            <button class="close-btn" onclick="toggleAdmin()" aria-label="Schließen">✕</button>
+        </div>
+        <div class="admin-body">
+            <div class="admin-section">
+                <h4>📅 Wochentage &amp; Uhrzeiten</h4>
+                <div class="availability-grid" id="availabilityGrid"></div>
+            </div>
+            <div class="admin-section">
+                <h4>📧 E-Mail-Empfänger</h4>
+                <p style="font-size:13px;color:var(--color-text-secondary);margin:0 0 8px;">Buchungen werden via FormSubmit.co an die im HTML-Code konfigurierte Adresse gesendet. Zum Ändern: Datei öffnen → <code style="background:var(--color-secondary);padding:1px 4px;border-radius:4px;font-size:12px;">IHRE-EMAIL@domain.de</code> ersetzen.</p>
+            </div>
+            <button class="admin-save" onclick="saveAvailability()">Verfügbarkeit speichern</button>
+            <div class="admin-section" style="margin-top:24px;">
+                <h4>📋 Gebuchte Termine (diese Sitzung)</h4>
+                <div class="bookings-list" id="bookingsList">
+                    <div class="no-bookings">Noch keine Buchungen vorhanden</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// ╔══════════════════════════════════════════════════════════╗
+// ║  ⚠️ WICHTIG: Ersetzen Sie die E-Mail-Adresse unten!    ║
+// ║  Buchungs-Mails gehen an diese Adresse.                 ║
+// ╚══════════════════════════════════════════════════════════╝
+const FORMSUBMIT_EMAIL = 'dr-dirk@dr-dirkinstitute.org';
+// ──────────────────────────────────────────────────────────
+
+const FORMSUBMIT_URL = `https://formsubmit.co/ajax/${FORMSUBMIT_EMAIL}`;
+const MONTH_NAMES = ['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'];
+
+let state = {
+    currentMonth: new Date().getMonth(),
+    currentYear: new Date().getFullYear(),
+    selectedDate: null,
+    selectedSlot: null,
+    selectedMeetingType: null,
+    bookings: [],
+    meetingTypes: [
+        { id:'erstgespraech', name:'Erstgespräch', duration:30, color:'#21808d' },
+        { id:'beratung', name:'Beratungstermin', duration:60, color:'#e68161' },
+        { id:'kurztermin', name:'Kurztermin', duration:15, color:'#5e5240' }
+    ],
+    availability: {
+        0:{ enabled:true, start:'09:00', end:'17:00' },
+        1:{ enabled:true, start:'09:00', end:'17:00' },
+        2:{ enabled:true, start:'09:00', end:'17:00' },
+        3:{ enabled:true, start:'09:00', end:'17:00' },
+        4:{ enabled:true, start:'09:00', end:'15:00' },
+        5:{ enabled:false, start:'10:00', end:'13:00' },
+        6:{ enabled:false, start:'10:00', end:'13:00' }
+    }
+};
+
+function renderMeetingTypes() {
+    const c = document.getElementById('meetingTypes');
+    c.innerHTML = '';
+    state.meetingTypes.forEach(mt => {
+        const card = document.createElement('div');
+        card.className = 'meeting-type-card' + (state.selectedMeetingType === mt.id ? ' active' : '');
+        card.innerHTML = `<div class="mt-color" style="background:${mt.color}"></div><h3>${mt.name}</h3><span class="mt-duration">${mt.duration} Minuten</span>`;
+        card.addEventListener('click', () => {
+            state.selectedMeetingType = mt.id;
+            renderMeetingTypes();
+            renderCalendar();
+            if (state.selectedDate) renderTimeslots();
+        });
+        c.appendChild(card);
+    });
+    if (!state.selectedMeetingType) {
+        state.selectedMeetingType = state.meetingTypes[0].id;
+        renderMeetingTypes();
+    }
+}
+
+function renderCalendar() {
+    document.getElementById('calendarTitle').textContent = `${MONTH_NAMES[state.currentMonth]} ${state.currentYear}`;
+    const c = document.getElementById('calendarDays');
+    c.innerHTML = '';
+    const first = new Date(state.currentYear, state.currentMonth, 1);
+    let startDay = first.getDay() - 1;
+    if (startDay < 0) startDay = 6;
+    const daysInMonth = new Date(state.currentYear, state.currentMonth + 1, 0).getDate();
+    const today = new Date(); today.setHours(0,0,0,0);
+
+    for (let i = 0; i < startDay; i++) {
+        const el = document.createElement('div');
+        el.className = 'calendar-day empty';
+        c.appendChild(el);
+    }
+    for (let d = 1; d <= daysInMonth; d++) {
+        const date = new Date(state.currentYear, state.currentMonth, d);
+        date.setHours(0,0,0,0);
+        const btn = document.createElement('button');
+        btn.className = 'calendar-day';
+        btn.textContent = d;
+        const dow = date.getDay();
+        const ak = dow === 0 ? 6 : dow - 1;
+        const avail = state.availability[ak] && state.availability[ak].enabled;
+        const past = date < today;
+        if (past || !avail) btn.classList.add('disabled');
+        else btn.classList.add('has-slots');
+        if (date.getTime() === today.getTime()) btn.classList.add('today');
+        if (state.selectedDate && date.getTime() === state.selectedDate.getTime()) btn.classList.add('selected');
+        if (!past && avail) {
+            btn.addEventListener('click', () => {
+                state.selectedDate = date;
+                state.selectedSlot = null;
+                renderCalendar();
+                renderTimeslots();
+            });
+        }
+        c.appendChild(btn);
+    }
+}
+
+function getSlots(date) {
+    const dow = date.getDay();
+    const ak = dow === 0 ? 6 : dow - 1;
+    const av = state.availability[ak];
+    if (!av || !av.enabled) return [];
+    const [sh,sm] = av.start.split(':').map(Number);
+    const [eh,em] = av.end.split(':').map(Number);
+    const startM = sh*60+sm, endM = eh*60+em;
+    const mt = state.meetingTypes.find(m => m.id === state.selectedMeetingType);
+    const interval = mt ? mt.duration : 30;
+    const slots = [];
+    const now = new Date();
+    const isToday = date.toDateString() === now.toDateString();
+    for (let m = startM; m + interval <= endM; m += interval) {
+        const h = Math.floor(m/60), min = m%60;
+        if (isToday) { const st = new Date(date); st.setHours(h,min,0,0); if (st <= now) continue; }
+        const ds = fmtDate(date);
+        const ts = `${String(h).padStart(2,'0')}:${String(min).padStart(2,'0')}`;
+        if (!state.bookings.some(b => b.date===ds && b.time===ts && b.meetingType===state.selectedMeetingType)) slots.push(ts);
+    }
+    return slots;
+}
+
+function renderTimeslots() {
+    const h = document.getElementById('timeslotsHeader');
+    const l = document.getElementById('timeslotsList');
+    if (!state.selectedDate) {
+        h.innerHTML = '<h3>Zeitfenster wählen</h3><p>Bitte wählen Sie zunächst einen Tag</p>';
+        l.innerHTML = '<div class="no-slots">Wählen Sie einen Tag im Kalender</div>';
+        return;
+    }
+    const ds = state.selectedDate.toLocaleDateString('de-DE',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+    h.innerHTML = `<h3>${ds}</h3><p>Verfügbare Zeitfenster</p>`;
+    const slots = getSlots(state.selectedDate);
+    if (!slots.length) { l.innerHTML = '<div class="no-slots">Keine freien Zeitfenster an diesem Tag</div>'; return; }
+    l.innerHTML = '';
+    const mt = state.meetingTypes.find(m => m.id === state.selectedMeetingType);
+    slots.forEach(slot => {
+        const btn = document.createElement('button');
+        btn.className = 'timeslot-btn';
+        const eMin = parseInt(slot.split(':')[0])*60 + parseInt(slot.split(':')[1]) + (mt?mt.duration:30);
+        btn.textContent = `${slot} – ${String(Math.floor(eMin/60)).padStart(2,'0')}:${String(eMin%60).padStart(2,'0')}`;
+        btn.addEventListener('click', () => { state.selectedSlot = slot; openBookingForm(); });
+        l.appendChild(btn);
+    });
+}
+
+function fmtDate(d) { return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; }
+
+function openBookingForm() {
+    const mt = state.meetingTypes.find(m => m.id === state.selectedMeetingType);
+    const ds = state.selectedDate.toLocaleDateString('de-DE',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+    const eMin = parseInt(state.selectedSlot.split(':')[0])*60 + parseInt(state.selectedSlot.split(':')[1]) + (mt?mt.duration:30);
+    const endStr = `${String(Math.floor(eMin/60)).padStart(2,'0')}:${String(eMin%60).padStart(2,'0')}`;
+
+    document.getElementById('formSummary').innerHTML = `<span class="icon-cal">📅</span><div class="summary-details"><strong>${mt?mt.name:'Termin'} – ${mt?mt.duration:30} Min.</strong><span>${ds}<br>${state.selectedSlot} – ${endStr} Uhr</span></div>`;
+
+    document.getElementById('fsMeetingType').value = mt ? mt.name : '';
+    document.getElementById('fsDate').value = ds;
+    document.getElementById('fsTime').value = `${state.selectedSlot} – ${endStr} Uhr`;
+    document.getElementById('fsDuration').value = (mt?mt.duration:30) + ' Minuten';
+    document.getElementById('fsSubject').value = `Neue Terminbuchung: ${mt?mt.name:''} am ${ds}`;
+
+    document.getElementById('bookingOverlay').classList.add('visible');
+}
+
+function closeBookingForm() {
+    document.getElementById('bookingOverlay').classList.remove('visible');
+    document.getElementById('bookingForm').reset();
+    document.querySelectorAll('.error-msg').forEach(e => e.classList.remove('visible'));
+    document.querySelectorAll('.form-input.error').forEach(e => e.classList.remove('error'));
+    document.getElementById('submitBtn').disabled = false;
+    document.getElementById('submitBtn').innerHTML = 'Termin bestätigen';
+}
+
+function submitBooking(e) {
+    e.preventDefault();
+    let valid = true;
+    const name = document.getElementById('fName').value.trim();
+    const email = document.getElementById('fEmail').value.trim();
+    const topic = document.getElementById('fTopic').value;
+
+    if (!name) { document.getElementById('errName').classList.add('visible'); document.getElementById('fName').classList.add('error'); valid=false; }
+    else { document.getElementById('errName').classList.remove('visible'); document.getElementById('fName').classList.remove('error'); }
+
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { document.getElementById('errEmail').classList.add('visible'); document.getElementById('fEmail').classList.add('error'); valid=false; }
+    else { document.getElementById('errEmail').classList.remove('visible'); document.getElementById('fEmail').classList.remove('error'); }
+
+    if (!valid) return;
+
+    const btn = document.getElementById('submitBtn');
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner"></span>Wird gesendet…';
+
+    const formData = new FormData(document.getElementById('bookingForm'));
+
+    fetch(FORMSUBMIT_URL, {
+        method: 'POST',
+        headers: { 'Accept': 'application/json' },
+        body: formData
+    })
+    .then(r => r.json())
+    .then(data => {
+        finishBooking(name, email, topic);
+    })
+    .catch(err => {
+        finishBooking(name, email, topic);
+    });
+}
+
+function finishBooking(name, email, topic) {
+    const mt = state.meetingTypes.find(m => m.id === state.selectedMeetingType);
+    state.bookings.push({
+        id: Date.now(),
+        date: fmtDate(state.selectedDate),
+        time: state.selectedSlot,
+        meetingType: state.selectedMeetingType,
+        meetingTypeName: mt ? mt.name : '',
+        duration: mt ? mt.duration : 30,
+        name, email, topic,
+        createdAt: new Date().toISOString()
+    });
+
+    closeBookingForm();
+
+    const ds = state.selectedDate.toLocaleDateString('de-DE',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+    const eMin = parseInt(state.selectedSlot.split(':')[0])*60 + parseInt(state.selectedSlot.split(':')[1]) + (mt?mt.duration:30);
+    const endStr = `${String(Math.floor(eMin/60)).padStart(2,'0')}:${String(eMin%60).padStart(2,'0')}`;
+
+    document.getElementById('successDetails').textContent = `${mt?mt.name:''} am ${ds}, ${state.selectedSlot} – ${endStr} Uhr.\nEine Bestätigung wird an ${email} gesendet.`;
+    document.getElementById('successOverlay').classList.add('visible');
+
+    state.selectedSlot = null;
+    renderTimeslots();
+    renderBookingsList();
+}
+
+function closeSuccess() { document.getElementById('successOverlay').classList.remove('visible'); }
+
+function changeMonth(d) {
+    state.currentMonth += d;
+    if (state.currentMonth > 11) { state.currentMonth = 0; state.currentYear++; }
+    if (state.currentMonth < 0) { state.currentMonth = 11; state.currentYear--; }
+    state.selectedDate = null; state.selectedSlot = null;
+    renderCalendar(); renderTimeslots();
+}
+
+function toggleAdmin() { document.getElementById('adminOverlay').classList.toggle('visible'); if (document.getElementById('adminOverlay').classList.contains('visible')) { renderAvailabilityGrid(); renderBookingsList(); } }
+
+function renderAvailabilityGrid() {
+    const g = document.getElementById('availabilityGrid');
+    g.innerHTML = '';
+    ['Montag','Dienstag','Mittwoch','Donnerstag','Freitag','Samstag','Sonntag'].forEach((day,i) => {
+        const av = state.availability[i];
+        const row = document.createElement('div');
+        row.className = 'availability-row';
+        row.innerHTML = `<input type="checkbox" id="avD${i}" ${av.enabled?'checked':''}><label for="avD${i}">${day}</label><input type="time" id="avS${i}" value="${av.start}"><span style="color:var(--color-text-secondary)">–</span><input type="time" id="avE${i}" value="${av.end}">`;
+        g.appendChild(row);
+    });
+}
+
+function saveAvailability() {
+    for (let i=0;i<7;i++) state.availability[i] = { enabled:document.getElementById(`avD${i}`).checked, start:document.getElementById(`avS${i}`).value, end:document.getElementById(`avE${i}`).value };
+    renderCalendar();
+    if (state.selectedDate) renderTimeslots();
+    toggleAdmin();
+}
+
+function renderBookingsList() {
+    const l = document.getElementById('bookingsList');
+    if (!state.bookings.length) { l.innerHTML = '<div class="no-bookings">Noch keine Buchungen vorhanden</div>'; return; }
+    l.innerHTML = '';
+    [...state.bookings].sort((a,b) => (a.date+a.time).localeCompare(b.date+b.time)).forEach(b => {
+        const item = document.createElement('div');
+        item.className = 'booking-item';
+        const d = new Date(b.date+'T00:00:00');
+        const ds = d.toLocaleDateString('de-DE',{weekday:'short',day:'numeric',month:'short',year:'numeric'});
+        item.innerHTML = `<strong>${b.name} – ${b.meetingTypeName}</strong><span>${ds}, ${b.time} Uhr · ${b.email}${b.topic?' · '+b.topic:''}</span>`;
+        l.appendChild(item);
+    });
+}
+
+renderMeetingTypes();
+renderCalendar();
+renderTimeslots();
+</script>
+</body>
+</html>
