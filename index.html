@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dr. Dirk KÃ¶tting â€“ Terminbuchung</title>
+    <title>Dr. Dirk Koetting - Terminbuchung</title>
+    <link rel="icon" type="image/png" href="assets/favicon.png">
     <style>
         :root {
-            --color-white: rgba(255,255,255,1);
             --color-cream-50: rgba(252,252,249,1);
             --color-cream-100: rgba(255,255,253,1);
             --color-gray-200: rgba(245,245,245,1);
@@ -25,10 +25,8 @@
             --color-teal-800: rgba(41,150,161,1);
             --color-red-400: rgba(255,84,89,1);
             --color-red-500: rgba(192,21,47,1);
-            --color-orange-400: rgba(230,129,97,1);
             --color-brown-600-rgb: 94,82,64;
             --color-teal-500-rgb: 33,128,141;
-            --color-slate-900-rgb: 19,52,59;
             --color-background: var(--color-cream-50);
             --color-surface: var(--color-cream-100);
             --color-text: var(--color-slate-900);
@@ -46,7 +44,6 @@
             --font-family-base: "FKGroteskNeue","Geist","Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
             --radius-sm: 6px;
             --radius-base: 8px;
-            --radius-md: 10px;
             --radius-lg: 12px;
             --radius-full: 9999px;
             --shadow-sm: 0 1px 3px rgba(0,0,0,0.04),0 1px 2px rgba(0,0,0,0.02);
@@ -82,27 +79,17 @@
         html { font-size:14px; }
         body { margin:0; padding:0; font-family:var(--font-family-base); background:var(--color-background); color:var(--color-text); line-height:1.5; -webkit-font-smoothing:antialiased; min-height:100vh; }
 
-        /* â”€â”€ SETUP BANNER â”€â”€ */
-        .setup-banner { background:rgba(var(--color-teal-500-rgb),0.1); border:1px solid var(--color-primary); border-radius:var(--radius-lg); padding:16px 20px; margin:16px auto; max-width:928px; display:flex; align-items:flex-start; gap:12px; }
-        .setup-banner.hidden { display:none; }
-        .setup-banner .icon { font-size:22px; flex-shrink:0; }
-        .setup-banner .text { flex:1; }
-        .setup-banner h4 { margin:0 0 4px; font-size:14px; font-weight:600; }
-        .setup-banner p { margin:0; font-size:13px; color:var(--color-text-secondary); }
-        .setup-banner code { background:var(--color-secondary); padding:1px 6px; border-radius:var(--radius-sm); font-size:12px; font-family:monospace; }
-        .setup-banner .dismiss { background:none; border:none; color:var(--color-text-secondary); cursor:pointer; font-size:18px; padding:0; flex-shrink:0; }
-
         .app-wrapper { max-width:960px; margin:0 auto; padding:24px 16px; }
 
-        /* â”€â”€ PROFILE â”€â”€ */
+        .loading-bar { height:3px; background:var(--color-primary); position:fixed; top:0; left:0; width:0; transition:width 0.4s ease; z-index:200; }
+        .loading-bar.active { width:70%; }
+        .loading-bar.done { width:100%; opacity:0; transition:width 0.2s ease, opacity 0.4s ease 0.2s; }
+
         .profile-header { text-align:center; margin-bottom:32px; }
         .profile-avatar { width:72px; height:72px; border-radius:50%; background:var(--color-primary); color:var(--color-btn-primary-text); display:inline-flex; align-items:center; justify-content:center; font-size:28px; font-weight:600; margin-bottom:12px; }
-        .profile-logo { max-width:180px; max-height:80px; object-fit:contain; margin-bottom:12px; }
-        .profile-logo-hint { font-size:11px; color:var(--color-text-secondary); background:var(--color-secondary); padding:4px 10px; border-radius:var(--radius-full); display:inline-block; margin-bottom:8px; cursor:help; }
         .profile-header h1 { font-size:24px; font-weight:600; margin:0 0 4px; letter-spacing:-0.01em; }
         .profile-header p { color:var(--color-text-secondary); margin:0; font-size:14px; }
 
-        /* â”€â”€ MEETING TYPES â”€â”€ */
         .meeting-types { display:flex; flex-wrap:wrap; gap:12px; justify-content:center; margin-bottom:32px; }
         .meeting-type-card { background:var(--color-surface); border:2px solid var(--color-card-border); border-radius:var(--radius-lg); padding:16px 20px; cursor:pointer; transition:all var(--duration-normal) var(--ease-standard); text-align:left; min-width:200px; flex:1; max-width:280px; }
         .meeting-type-card:hover { box-shadow:var(--shadow-md); border-color:var(--color-primary); }
@@ -111,11 +98,9 @@
         .meeting-type-card h3 { font-size:15px; font-weight:600; margin:0 0 4px; }
         .meeting-type-card .mt-duration { font-size:12px; color:var(--color-text-secondary); }
 
-        /* â”€â”€ LAYOUT â”€â”€ */
         .booking-layout { display:grid; grid-template-columns:1fr; gap:24px; }
         @media (min-width:700px) { .booking-layout { grid-template-columns:1fr 320px; } }
 
-        /* â”€â”€ CALENDAR â”€â”€ */
         .calendar-card { background:var(--color-surface); border:1px solid var(--color-card-border); border-radius:var(--radius-lg); box-shadow:var(--shadow-sm); overflow:hidden; }
         .calendar-header { display:flex; align-items:center; justify-content:space-between; padding:16px 20px; border-bottom:1px solid var(--color-card-border); }
         .calendar-header h2 { font-size:17px; font-weight:600; margin:0; }
@@ -137,7 +122,6 @@
         .calendar-day.has-slots::before { content:''; position:absolute; bottom:2px; width:4px; height:4px; border-radius:50%; background:var(--color-success); }
         .calendar-day.selected.has-slots::before { background:var(--color-btn-primary-text); }
 
-        /* â”€â”€ TIME SLOTS â”€â”€ */
         .timeslots-panel { background:var(--color-surface); border:1px solid var(--color-card-border); border-radius:var(--radius-lg); box-shadow:var(--shadow-sm); overflow:hidden; }
         .timeslots-header { padding:16px 20px; border-bottom:1px solid var(--color-card-border); }
         .timeslots-header h3 { font-size:15px; font-weight:600; margin:0 0 2px; }
@@ -146,11 +130,10 @@
         .timeslot-btn { padding:10px 16px; border:1px solid var(--color-border); border-radius:var(--radius-base); background:var(--color-surface); color:var(--color-primary); font-size:14px; font-weight:600; cursor:pointer; transition:all var(--duration-fast) var(--ease-standard); text-align:center; }
         .timeslot-btn:hover { background:var(--color-primary); color:var(--color-btn-primary-text); border-color:var(--color-primary); }
         .timeslot-btn.selected { background:var(--color-primary); color:var(--color-btn-primary-text); border-color:var(--color-primary); }
-        .timeslot-btn.disabled { background:var(--color-secondary); color:var(--color-text-secondary); border-color:var(--color-border); cursor:not-allowed; opacity:0.65; }
-        .timeslot-btn.disabled:hover { background:var(--color-secondary); color:var(--color-text-secondary); border-color:var(--color-border); }
+        .timeslot-btn.booked { background:var(--color-secondary); color:var(--color-text-secondary); border-color:var(--color-border); cursor:not-allowed; opacity:0.65; text-decoration:line-through; }
+        .timeslot-btn.booked:hover { background:var(--color-secondary); color:var(--color-text-secondary); border-color:var(--color-border); }
         .no-slots { text-align:center; padding:24px; color:var(--color-text-secondary); font-size:13px; }
 
-        /* â”€â”€ FORM OVERLAY â”€â”€ */
         .overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.4); z-index:100; align-items:center; justify-content:center; padding:16px; backdrop-filter:blur(4px); }
         .overlay.visible { display:flex; }
         .modal-card { background:var(--color-surface); border-radius:var(--radius-lg); box-shadow:var(--shadow-lg); width:100%; max-width:520px; max-height:90vh; overflow-y:auto; border:1px solid var(--color-card-border); }
@@ -164,7 +147,7 @@
         .form-summary .summary-details span { color:var(--color-text-secondary); }
         .form-body { padding:24px; }
         .form-group { margin-bottom:16px; }
-        .form-label { display:block; margin-bottom:6px; font-weight:500; font-size:13px; color:var(--color-text); }
+        .form-label { display:block; margin-bottom:6px; font-weight:500; font-size:13px; }
         .form-label .req { color:var(--color-error); margin-left:2px; }
         .form-input { display:block; width:100%; padding:10px 12px; font-size:14px; line-height:1.5; color:var(--color-text); background:var(--color-background); border:1px solid var(--color-border); border-radius:var(--radius-base); font-family:var(--font-family-base); transition:border-color var(--duration-fast),box-shadow var(--duration-fast); }
         .form-input:focus { outline:none; border-color:var(--color-primary); box-shadow:0 0 0 3px var(--color-focus-ring); }
@@ -175,18 +158,15 @@
         .form-actions { display:flex; gap:12px; justify-content:flex-end; padding:16px 24px; border-top:1px solid var(--color-card-border); }
         .btn-primary { padding:10px 24px; border-radius:var(--radius-base); border:none; background:var(--color-primary); color:var(--color-btn-primary-text); font-size:14px; font-weight:600; cursor:pointer; transition:all var(--duration-fast); font-family:var(--font-family-base); }
         .btn-primary:hover { background:var(--color-primary-hover); }
-        .btn-primary:active { background:var(--color-primary-active); }
         .btn-primary:disabled { opacity:0.5; cursor:not-allowed; }
         .btn-secondary { padding:10px 20px; border-radius:var(--radius-base); border:1px solid var(--color-border); background:var(--color-surface); color:var(--color-text); font-size:14px; font-weight:500; cursor:pointer; transition:all var(--duration-fast); font-family:var(--font-family-base); }
         .btn-secondary:hover { background:var(--color-secondary); }
 
-        /* â”€â”€ SUCCESS â”€â”€ */
         .success-card { background:var(--color-surface); border-radius:var(--radius-lg); box-shadow:var(--shadow-lg); padding:40px; text-align:center; max-width:420px; border:1px solid var(--color-card-border); }
         .success-icon { width:64px; height:64px; border-radius:50%; background:rgba(var(--color-teal-500-rgb),0.12); color:var(--color-success); display:inline-flex; align-items:center; justify-content:center; font-size:32px; margin-bottom:16px; }
         .success-card h3 { font-size:20px; font-weight:600; margin:0 0 8px; }
         .success-card p { color:var(--color-text-secondary); margin:0 0 24px; font-size:14px; }
 
-        /* â”€â”€ ADMIN â”€â”€ */
         .admin-toggle { position:fixed; bottom:20px; right:20px; z-index:50; width:48px; height:48px; border-radius:50%; background:var(--color-primary); color:var(--color-btn-primary-text); border:none; cursor:pointer; font-size:20px; box-shadow:var(--shadow-lg); display:flex; align-items:center; justify-content:center; transition:all var(--duration-fast); }
         .admin-toggle:hover { background:var(--color-primary-hover); transform:scale(1.05); }
         .admin-card { background:var(--color-surface); border-radius:var(--radius-lg); box-shadow:var(--shadow-lg); width:100%; max-width:600px; max-height:90vh; overflow-y:auto; border:1px solid var(--color-card-border); }
@@ -198,18 +178,22 @@
         .availability-row label { width:80px; font-size:13px; font-weight:500; }
         .availability-row input[type="checkbox"] { accent-color:var(--color-primary); width:16px; height:16px; }
         .availability-row input[type="time"] { padding:6px 8px; border:1px solid var(--color-border); border-radius:var(--radius-sm); background:var(--color-background); color:var(--color-text); font-family:var(--font-family-base); font-size:13px; }
-        .availability-row input[type="time"]:focus { outline:none; border-color:var(--color-primary); box-shadow:0 0 0 3px var(--color-focus-ring); }
         .admin-save { padding:10px 24px; border-radius:var(--radius-base); border:none; background:var(--color-primary); color:var(--color-btn-primary-text); font-size:14px; font-weight:600; cursor:pointer; font-family:var(--font-family-base); transition:all var(--duration-fast); width:100%; }
         .admin-save:hover { background:var(--color-primary-hover); }
-        .bookings-list { display:flex; flex-direction:column; gap:8px; max-height:240px; overflow-y:auto; }
+        .bookings-list { display:flex; flex-direction:column; gap:8px; max-height:300px; overflow-y:auto; }
         .booking-item { padding:12px; border:1px solid var(--color-card-border); border-radius:var(--radius-base); font-size:13px; background:var(--color-background); }
         .booking-item strong { display:block; margin-bottom:2px; }
         .booking-item span { color:var(--color-text-secondary); font-size:12px; }
         .no-bookings { text-align:center; color:var(--color-text-secondary); padding:16px; font-size:13px; }
 
-        /* â”€â”€ SPINNER â”€â”€ */
         .spinner { display:inline-block; width:16px; height:16px; border:2px solid var(--color-btn-primary-text); border-right-color:transparent; border-radius:50%; animation:spin .6s linear infinite; margin-right:8px; vertical-align:middle; }
         @keyframes spin { to { transform:rotate(360deg); } }
+
+        .sync-badge { display:inline-flex; align-items:center; gap:6px; font-size:11px; color:var(--color-text-secondary); padding:4px 10px; background:var(--color-secondary); border-radius:var(--radius-full); margin-top:8px; }
+        .sync-dot { width:6px; height:6px; border-radius:50%; background:var(--color-success); }
+        .sync-dot.loading { background:orange; animation:pulse 1s ease-in-out infinite; }
+        .sync-dot.error { background:var(--color-error); }
+        @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
 
         @media (max-width:699px) {
             .calendar-day { font-size:12px; }
@@ -219,42 +203,27 @@
 </head>
 <body>
 
-<!-- â•”â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•— -->
-<!-- â•‘  SETUP-HINWEIS: E-Mail-Adresse hier Ã¤ndern!                â•‘ -->
-<!-- â•‘  Suche nach IHRE-EMAIL@domain.de und ersetze sie.          â•‘ -->
-<!-- â•šâ•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
-
-<div class="setup-banner" id="setupBanner">
-    <span class="icon">ðŸ“§</span>
-    <div class="text">
-        <h4>E-Mail-Adresse konfigurieren</h4>
-        <p>Buchungen werden an die im Code hinterlegte E-Mail gesendet. Ã–ffnen Sie die Datei in einem Texteditor und ersetzen Sie <code>IHRE-EMAIL@domain.de</code> durch Ihre echte E-Mail-Adresse. Nach dem ersten Test-Formular erhalten Sie eine BestÃ¤tigungs-E-Mail von FormSubmit.</p>
-    </div>
-    <button class="dismiss" onclick="document.getElementById('setupBanner').classList.add('hidden')" aria-label="Hinweis schlieÃŸen">âœ•</button>
-</div>
+<div class="loading-bar" id="loadingBar"></div>
 
 <div class="app-wrapper">
     <header class="profile-header">
-        <!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
-        <!-- LOGO EINBINDEN: Ersetzen Sie die src="..." unten mit:   -->
-        <!--   Option A: URL zu Ihrem Logo (z.B. logo.png im Repo)  -->
-        <!--   Option B: Base64-String (data:image/png;base64,...)  -->
-        <!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
-        <img class="profile-logo" id="profileLogo" src="" alt="Dr. Dirk KÃ¶tting Logo" style="display:none;">
-        <div class="profile-avatar" id="profileAvatar">DK</div>
-        <span class="profile-logo-hint" id="logoHint" title="Ã–ffnen Sie die Datei und ersetzen Sie src='' beim img-Tag mit Ihrer Logo-URL">ðŸ’¡ Logo einbinden? â†’ Anleitung im Code</span>
-        <h1>Dr. Dirk KÃ¶tting</h1>
+        <div class="profile-avatar">DK</div>
+        <h1>Dr. Dirk Koetting</h1>
         <p>IT Governance &amp; AI Policy Beratung</p>
+        <div class="sync-badge">
+            <span class="sync-dot loading" id="syncDot"></span>
+            <span id="syncLabel">Verfuegbarkeit wird geladen...</span>
+        </div>
     </header>
 
-    <section class="meeting-types" id="meetingTypes" aria-label="Terminart wÃ¤hlen"></section>
+    <section class="meeting-types" id="meetingTypes" aria-label="Terminart waehlen"></section>
 
     <main class="booking-layout">
         <div class="calendar-card">
             <div class="calendar-header">
                 <div class="cal-nav">
                     <button onclick="changeMonth(-1)" aria-label="Vorheriger Monat">&#8249;</button>
-                    <button onclick="changeMonth(1)" aria-label="NÃ¤chster Monat">&#8250;</button>
+                    <button onclick="changeMonth(1)" aria-label="Naechster Monat">&#8250;</button>
                 </div>
                 <h2 id="calendarTitle"></h2>
                 <div style="width:76px"></div>
@@ -269,116 +238,96 @@
 
         <div class="timeslots-panel">
             <div class="timeslots-header" id="timeslotsHeader">
-                <h3>Zeitfenster wÃ¤hlen</h3>
-                <p>Bitte wÃ¤hlen Sie zunÃ¤chst einen Tag</p>
+                <h3>Zeitfenster waehlen</h3>
+                <p>Bitte waehlen Sie zunaechst einen Tag</p>
             </div>
             <div class="timeslots-list" id="timeslotsList">
-                <div class="no-slots">WÃ¤hlen Sie einen Tag im Kalender</div>
+                <div class="no-slots">Waehlen Sie einen Tag im Kalender</div>
             </div>
         </div>
     </main>
 </div>
 
-<!-- â”€â”€ BOOKING FORM â”€â”€ -->
 <div class="overlay" id="bookingOverlay">
     <div class="modal-card">
         <div class="modal-header">
             <h3>Termin buchen</h3>
-            <button class="close-btn" onclick="closeBookingForm()" aria-label="SchlieÃŸen">âœ•</button>
+            <button class="close-btn" onclick="closeBookingForm()">&#10005;</button>
         </div>
         <div class="form-summary" id="formSummary"></div>
-        <form id="bookingForm" onsubmit="submitBooking(event)">
-            <!-- FormSubmit hidden fields -->
-            <input type="hidden" name="_subject" id="fsSubject" value="Neue Terminbuchung">
-            <input type="hidden" name="_captcha" value="false">
-            <input type="hidden" name="_template" value="table">
-            <input type="hidden" name="_next" id="fsNext" value="">`r`n            <input type="hidden" name="_autoresponse" id="fsAutoresponse" value="">`r`n            <input type="hidden" name="_replyto" id="fsReplyTo" value="">
-            <input type="text" name="_honey" style="display:none">
-            <!-- Booking info (hidden, filled by JS) -->
-            <input type="hidden" name="Terminart" id="fsMeetingType">
-            <input type="hidden" name="Datum" id="fsDate">
-            <input type="hidden" name="Uhrzeit" id="fsTime">
-            <input type="hidden" name="Dauer" id="fsDuration">`r`n            <input type="hidden" name="Outlook-ICS" id="fsIcs">
-
-            <div class="form-body">
-                <div class="form-group">
-                    <label class="form-label" for="fName">Vorname &amp; Nachname<span class="req">*</span></label>
-                    <input class="form-input" type="text" id="fName" name="Name" placeholder="z.B. Max Mustermann" required>
-                    <div class="error-msg" id="errName">Bitte geben Sie Ihren Namen ein</div>
-                </div>
-                <div class="form-group">
-                    <label class="form-label" for="fEmail">E-Mail-Adresse<span class="req">*</span></label>
-                    <input class="form-input" type="email" id="fEmail" name="E-Mail" placeholder="z.B. max@firma.de" required>
-                    <div class="error-msg" id="errEmail">Bitte geben Sie eine gÃ¼ltige E-Mail ein</div>
-                </div>
-                <div class="form-group">
-                    <label class="form-label" for="fPhone">Telefonnummer</label>
-                    <input class="form-input" type="tel" id="fPhone" name="Telefon" placeholder="z.B. +49 170 1234567">
-                </div>
-                <div class="form-group">
-                    <label class="form-label" for="fCompany">Firma / Organisation</label>
-                    <input class="form-input" type="text" id="fCompany" name="Firma" placeholder="z.B. Muster GmbH">
-                </div>
-                <div class="form-group">
-                    <label class="form-label" for="fTopic">Thema / Anliegen<span class="req">*</span></label>
-                    <select class="form-input" id="fTopic" name="Thema" required>
-                        <option value="">â€” Bitte wÃ¤hlen â€”</option>
-                        <option value="AI Governance Beratung">AI Governance Beratung</option>
-                        <option value="KÂ² Kausale Kompetenz Beratung</option>
-			<option value="AI Governance Beratung">AI Governance Beratung</option>
-			<option value="EU AI Act Compliance">EU AI Act Compliance</option>
-                        <option value="IT Governance / ISMS">IT Governance / ISMS</option>
-                        <option value="Interim Management">Interim Management</option>
-                        <option value="Transition|Outsouricing|Carve Out Sparring </option>
-                        <option value="Sonstiges">Sonstiges</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label class="form-label" for="fNotes">ZusÃ¤tzliche Anmerkungen</label>
-                    <textarea class="form-input" id="fNotes" name="Anmerkungen" placeholder="Beschreiben Sie kurz Ihr Anliegenâ€¦" rows="3"></textarea>
-                </div>
+        <div class="form-body">
+            <div class="form-group">
+                <label class="form-label" for="fName">Vorname &amp; Nachname<span class="req">*</span></label>
+                <input class="form-input" type="text" id="fName" placeholder="z.B. Max Mustermann">
+                <div class="error-msg" id="errName">Bitte geben Sie Ihren Namen ein</div>
             </div>
-            <div class="form-actions">
-                <button type="button" class="btn-secondary" onclick="closeBookingForm()">Abbrechen</button>
-                <button type="submit" class="btn-primary" id="submitBtn">Termin bestÃ¤tigen</button>
+            <div class="form-group">
+                <label class="form-label" for="fEmail">E-Mail-Adresse<span class="req">*</span></label>
+                <input class="form-input" type="email" id="fEmail" placeholder="z.B. max@firma.de">
+                <div class="error-msg" id="errEmail">Bitte geben Sie eine gueltige E-Mail ein</div>
             </div>
-        </form>
+            <div class="form-group">
+                <label class="form-label" for="fPhone">Telefonnummer</label>
+                <input class="form-input" type="tel" id="fPhone" placeholder="z.B. +49 170 1234567">
+            </div>
+            <div class="form-group">
+                <label class="form-label" for="fCompany">Firma / Organisation</label>
+                <input class="form-input" type="text" id="fCompany" placeholder="z.B. Muster GmbH">
+            </div>
+            <div class="form-group">
+                <label class="form-label" for="fTopic">Thema / Anliegen<span class="req">*</span></label>
+                <select class="form-input" id="fTopic">
+                    <option value="">Bitte waehlen</option>
+                    <option value="K2 Kausale Kompetenz">AI Agentic Kausale Kompetenzberatung fuer Vorstaende / C-Level / Boardmember</option>
+                    <option value="AI Governance Beratung">AI Governance Beratung</option>
+                    <option value="EU AI Act Compliance">EU AI Act Compliance</option>
+                    <option value="IT Governance / ISMS">IT Governance / ISMS</option>
+                    <option value="Interim Management">Interim Management</option>
+                    <option value="Sourcing / Transitions">Sourcing / Transitions / Carve Out / Sparring</option>
+                    <option value="Sonstiges">Sonstiges</option>
+                </select>
+                <div class="error-msg" id="errTopic">Bitte waehlen Sie ein Thema</div>
+            </div>
+            <div class="form-group">
+                <label class="form-label" for="fNotes">Zusaetzliche Anmerkungen</label>
+                <textarea class="form-input" id="fNotes" placeholder="Beschreiben Sie kurz Ihr Anliegen..." rows="3"></textarea>
+            </div>
+        </div>
+        <div class="form-actions">
+            <button class="btn-secondary" onclick="closeBookingForm()">Abbrechen</button>
+            <button class="btn-primary" id="submitBtn" onclick="submitBooking()">Termin bestaetigen</button>
+        </div>
     </div>
 </div>
 
-<!-- â”€â”€ SUCCESS â”€â”€ -->
 <div class="overlay" id="successOverlay">
     <div class="success-card">
-        <div class="success-icon">âœ“</div>
+        <div class="success-icon">&#10003;</div>
         <h3>Termin erfolgreich gebucht!</h3>
         <p id="successDetails"></p>
-        <button class="btn-secondary" onclick="downloadIcs()">Outlook-Termin (.ics) herunterladen</button>`r`n        <button class="btn-primary" onclick="closeSuccess()">Neuen Termin buchen</button>
+        <button class="btn-secondary" onclick="downloadIcs()" style="margin-bottom:12px;width:100%;">Outlook-Termin (.ics) herunterladen</button>
+        <button class="btn-primary" onclick="closeSuccess()" style="width:100%;">Neuen Termin buchen</button>
     </div>
 </div>
 
-<!-- â”€â”€ ADMIN â”€â”€ -->
-<button class="admin-toggle" onclick="toggleAdmin()" aria-label="Admin-Einstellungen" title="VerfÃ¼gbarkeit &amp; Buchungen verwalten">âš™</button>
+<button class="admin-toggle" onclick="toggleAdmin()" title="Verfuegbarkeit verwalten">&#9881;</button>
 
 <div class="overlay" id="adminOverlay" style="z-index:150;">
     <div class="admin-card">
         <div class="modal-header">
-            <h3>âš™ VerfÃ¼gbarkeit verwalten</h3>
-            <button class="close-btn" onclick="toggleAdmin()" aria-label="SchlieÃŸen">âœ•</button>
+            <h3>&#9881; Verfuegbarkeit verwalten</h3>
+            <button class="close-btn" onclick="toggleAdmin()">&#10005;</button>
         </div>
         <div class="admin-body">
             <div class="admin-section">
-                <h4>ðŸ“… Wochentage &amp; Uhrzeiten</h4>
+                <h4>Wochentage &amp; Uhrzeiten</h4>
                 <div class="availability-grid" id="availabilityGrid"></div>
             </div>
-            <div class="admin-section">
-                <h4>ðŸ“§ E-Mail-EmpfÃ¤nger</h4>
-                <p style="font-size:13px;color:var(--color-text-secondary);margin:0 0 8px;">Buchungen werden via FormSubmit.co an die im HTML-Code konfigurierte Adresse gesendet. Zum Ã„ndern: Datei Ã¶ffnen â†’ <code style="background:var(--color-secondary);padding:1px 4px;border-radius:4px;font-size:12px;">IHRE-EMAIL@domain.de</code> ersetzen.</p>
-            </div>
-            <button class="admin-save" onclick="saveAvailability()">VerfÃ¼gbarkeit speichern</button>
+            <button class="admin-save" onclick="saveAvailability()">Verfuegbarkeit speichern</button>
             <div class="admin-section" style="margin-top:24px;">
-                <h4>ðŸ“‹ Gebuchte Termine (diese Sitzung)</h4>
+                <h4>Gebuchte Termine (aus Google Sheets)</h4>
                 <div class="bookings-list" id="bookingsList">
-                    <div class="no-bookings">Noch keine Buchungen vorhanden</div>
+                    <div class="no-bookings">Wird geladen...</div>
                 </div>
             </div>
         </div>
@@ -386,48 +335,147 @@
 </div>
 
 <script>
-const FORMSUBMIT_EMAIL = 'dr-dirk@dr-dirkinstitute.org';
-const FORMSUBMIT_URL = `https://formsubmit.co/ajax/${FORMSUBMIT_EMAIL}`;
+// -------------------------------------------------------
+// KONFIGURATION
+// -------------------------------------------------------
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz-v5-OWq3T1Pl_RGH-jPLuhj3rAjSam8bD_z-z_5ynS7OqQApvd0mcHMQlUPInK3YX/exec';
 const MONTH_NAMES = ['Januar','Februar','Maerz','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'];
-
 const SLOT_DURATION_MIN = 30;
-const FIXED_SLOTS = ['16:00', '16:30', '17:00'];
+const FIXED_SLOTS = ['16:00','16:30','17:00'];
 
+// -------------------------------------------------------
+// STATE
+// -------------------------------------------------------
 let state = {
     currentMonth: new Date().getMonth(),
     currentYear: new Date().getFullYear(),
     selectedDate: null,
     selectedSlot: null,
     selectedMeetingType: null,
-    bookings: [],
+    bookedSlots: [],
+    bookedSlotKeys: new Set(),
     lastBooking: null,
     meetingTypes: [
-        { id:'beratung', name:'Beratungstermin', duration:SLOT_DURATION_MIN, color:'#21808d' }
+        { id:'erstgespraech', name:'Erstgespraech', duration:30, color:'#21808d' },
+        { id:'beratung', name:'Beratungstermin', duration:30, color:'#5e5240' }
     ],
     availability: {
-        0:{ enabled:true, start:'16:00', end:'17:30' },
-        1:{ enabled:true, start:'16:00', end:'17:30' },
-        2:{ enabled:true, start:'16:00', end:'17:30' },
-        3:{ enabled:true, start:'16:00', end:'17:30' },
-        4:{ enabled:true, start:'16:00', end:'17:30' },
+        0:{ enabled:true,  start:'16:00', end:'17:30' },
+        1:{ enabled:true,  start:'16:00', end:'17:30' },
+        2:{ enabled:true,  start:'16:00', end:'17:30' },
+        3:{ enabled:true,  start:'16:00', end:'17:30' },
+        4:{ enabled:true,  start:'16:00', end:'17:30' },
         5:{ enabled:false, start:'16:00', end:'17:30' },
         6:{ enabled:false, start:'16:00', end:'17:30' }
     }
 };
 
-function loadBookings() {
+// -------------------------------------------------------
+// SLOTS AUS GOOGLE SHEETS LADEN
+// -------------------------------------------------------
+async function loadBookedSlots() {
+    setSync('loading', 'Verfuegbarkeit wird geladen...');
+    setLoadingBar(true);
+
     try {
-        const raw = localStorage.getItem('drdirk_bookings_v1');
-        if (!raw) return;
-        const parsed = JSON.parse(raw);
-        if (Array.isArray(parsed)) state.bookings = parsed;
-    } catch (_e) {}
+        const res = await fetch(APPS_SCRIPT_URL + '?t=' + Date.now(), { method:'GET' });
+        const data = await res.json();
+        const raw = data.booked || [];
+
+        state.bookedSlots = raw.map(b => {
+            const date = normalizeDateStr(b.date);
+            const time = normalizeTimeStr(b.time);
+            return {
+                date,
+                time,
+                key: `${date} ${time}`
+            };
+        });
+
+        state.bookedSlotKeys = new Set(state.bookedSlots.map(b => b.key));
+
+        console.log('Geladene Slots aus Google Sheets:', JSON.stringify(raw));
+        console.log('Normalisierte Slots:', JSON.stringify(state.bookedSlots));
+
+        setSync('ok', `Synchronisiert (${state.bookedSlots.length} Buchungen)`);
+        renderCalendar();
+        if (state.selectedDate) renderTimeslots();
+    } catch(err) {
+        console.error('Sheets laden fehlgeschlagen:', err);
+        setSync('error', 'Synchronisation fehlgeschlagen');
+    }
+
+    setLoadingBar(false);
 }
 
-function saveBookings() {
-    localStorage.setItem('drdirk_bookings_v1', JSON.stringify(state.bookings));
+// -------------------------------------------------------
+// NORMALISIERUNG
+// -------------------------------------------------------
+function normalizeDateStr(raw) {
+    if (!raw) return '';
+    const s = String(raw).trim();
+
+    if (/^\d{4}-\d{2}-\d{2}$/.test(s)) return s;
+
+    if (/^\d{4}-\d{2}-\d{2}T/.test(s)) {
+        const d = new Date(s);
+        if (!isNaN(d.getTime())) {
+            return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+        }
+    }
+
+    const dmy = s.match(/^(\d{1,2})\.(\d{1,2})\.(\d{2,4})$/);
+    if (dmy) {
+        const y = dmy[3].length === 2 ? '20' + dmy[3] : dmy[3];
+        return `${y}-${dmy[2].padStart(2,'0')}-${dmy[1].padStart(2,'0')}`;
+    }
+
+    const MONTHS = {
+        januar:1, februar:2, 'märz':3, maerz:3, april:4, mai:5, juni:6,
+        juli:7, august:8, september:9, oktober:10, november:11, dezember:12
+    };
+    const long = s.toLowerCase().match(/(\d{1,2})\.\s*([a-zäöü]+)\s+(\d{4})/);
+    if (long) {
+        const m = MONTHS[long[2]];
+        if (m) return `${long[3]}-${String(m).padStart(2,'0')}-${long[1].padStart(2,'0')}`;
+    }
+
+    console.warn('Unbekanntes Datumsformat:', s);
+    return s;
 }
 
+function normalizeTimeStr(raw) {
+    if (!raw) return '';
+    const s = String(raw).trim();
+    const t = s.match(/(\d{1,2}):(\d{2})/);
+    if (t) return `${t[1].padStart(2,'0')}:${t[2]}`;
+    return s;
+}
+
+function isSlotBooked(dateStr, timeStr) {
+    return state.bookedSlotKeys.has(`${dateStr} ${timeStr}`);
+}
+
+function setSync(status, label) {
+    const dot = document.getElementById('syncDot');
+    const lbl = document.getElementById('syncLabel');
+    dot.className = 'sync-dot' + (status === 'loading' ? ' loading' : status === 'error' ? ' error' : '');
+    lbl.textContent = label;
+}
+
+function setLoadingBar(active) {
+    const bar = document.getElementById('loadingBar');
+    if (active) {
+        bar.className = 'loading-bar active';
+    } else {
+        bar.className = 'loading-bar done';
+        setTimeout(() => bar.className = 'loading-bar', 600);
+    }
+}
+
+// -------------------------------------------------------
+// HELPER
+// -------------------------------------------------------
 function parseTimeToMinutes(time) {
     const [h,m] = time.split(':').map(Number);
     return h * 60 + m;
@@ -447,10 +495,6 @@ function fmtDate(d) {
     return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
 }
 
-function hasAvailableSlots(date) {
-    return getSlotStates(date).some(s => s.available);
-}
-
 function getSlotStates(date) {
     const ak = dayAvailabilityKey(date);
     const av = state.availability[ak];
@@ -462,35 +506,38 @@ function getSlotStates(date) {
 
     return FIXED_SLOTS.map(slot => {
         const startMin = parseTimeToMinutes(slot);
-        const endMin = startMin + SLOT_DURATION_MIN;
+        const endMin   = startMin + SLOT_DURATION_MIN;
         const withinWindow = startMin >= parseTimeToMinutes(av.start) && endMin <= parseTimeToMinutes(av.end);
-        if (!withinWindow) {
-            return { time: slot, available: false, reason: 'ausserhalb Verfuegbarkeit' };
-        }
 
-        const booked = state.bookings.some(b => b.date === dayId && b.time === slot);
-        if (booked) {
-            return { time: slot, available: false, reason: 'belegt' };
-        }
+        if (!withinWindow) return { time:slot, available:false, reason:'ausserhalb Verfuegbarkeit' };
+        if (isSlotBooked(dayId, slot)) return { time:slot, available:false, reason:'belegt' };
 
         if (isToday) {
             const st = new Date(date);
             const [h,m] = slot.split(':').map(Number);
             st.setHours(h, m, 0, 0);
-            if (st <= now) return { time: slot, available: false, reason: 'vergangen' };
+            if (st <= now) return { time:slot, available:false, reason:'vergangen' };
         }
 
-        return { time: slot, available: true, reason: '' };
+        return { time:slot, available:true, reason:'' };
     });
 }
 
+function hasAvailableSlots(date) {
+    return getSlotStates(date).some(s => s.available);
+}
+
+// -------------------------------------------------------
+// RENDER
+// -------------------------------------------------------
 function renderMeetingTypes() {
     const c = document.getElementById('meetingTypes');
     c.innerHTML = '';
+
     state.meetingTypes.forEach(mt => {
         const card = document.createElement('div');
         card.className = 'meeting-type-card' + (state.selectedMeetingType === mt.id ? ' active' : '');
-        card.innerHTML = `<div class="mt-color" style="background:${mt.color}"></div><h3>${mt.name}</h3><span class="mt-duration">${SLOT_DURATION_MIN} Minuten | Mo-Fr 16:00-17:30</span>`;
+        card.innerHTML = `<div class="mt-color" style="background:${mt.color}"></div><h3>${mt.name}</h3><span class="mt-duration">${mt.duration} Minuten | Mo-Fr 16:00-17:30</span>`;
         card.addEventListener('click', () => {
             state.selectedMeetingType = mt.id;
             renderMeetingTypes();
@@ -499,6 +546,7 @@ function renderMeetingTypes() {
         });
         c.appendChild(card);
     });
+
     if (!state.selectedMeetingType) {
         state.selectedMeetingType = state.meetingTypes[0].id;
         renderMeetingTypes();
@@ -538,7 +586,6 @@ function renderCalendar() {
 
         if (past || !isEnabledDay) btn.classList.add('disabled');
         if (hasSlots) btn.classList.add('has-slots');
-
         if (date.getTime() === today.getTime()) btn.classList.add('today');
         if (state.selectedDate && date.getTime() === state.selectedDate.getTime()) btn.classList.add('selected');
 
@@ -578,11 +625,14 @@ function renderTimeslots() {
     slots.forEach(slot => {
         const btn = document.createElement('button');
         const end = addMinutes(slot.time, SLOT_DURATION_MIN);
-        btn.className = 'timeslot-btn' + (slot.available ? '' : ' disabled');
-        btn.textContent = slot.available ? `${slot.time} - ${end}` : `${slot.time} - ${end} (${slot.reason})`;
-        btn.disabled = !slot.available;
 
-        if (slot.available) {
+        if (!slot.available) {
+            btn.className = 'timeslot-btn booked';
+            btn.textContent = slot.reason === 'belegt' ? `${slot.time} - ${end} (belegt)` : `${slot.time} - ${end} (${slot.reason})`;
+            btn.disabled = true;
+        } else {
+            btn.className = 'timeslot-btn';
+            btn.textContent = `${slot.time} - ${end}`;
             btn.addEventListener('click', () => {
                 state.selectedSlot = slot.time;
                 openBookingForm();
@@ -593,49 +643,40 @@ function renderTimeslots() {
     });
 }
 
+// -------------------------------------------------------
+// BOOKING FORM
+// -------------------------------------------------------
 function openBookingForm() {
     const mt = state.meetingTypes.find(m => m.id === state.selectedMeetingType);
     const ds = state.selectedDate.toLocaleDateString('de-DE',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
     const endStr = addMinutes(state.selectedSlot, SLOT_DURATION_MIN);
 
-    document.getElementById('formSummary').innerHTML = `<span class="icon-cal">Kalender</span><div class="summary-details"><strong>${mt ? mt.name : 'Termin'} - ${SLOT_DURATION_MIN} Min.</strong><span>${ds}<br>${state.selectedSlot} - ${endStr} Uhr</span></div>`;
-
-    document.getElementById('fsMeetingType').value = mt ? mt.name : 'Beratungstermin';
-    document.getElementById('fsDate').value = ds;
-    document.getElementById('fsTime').value = `${state.selectedSlot} - ${endStr} Uhr`;
-    document.getElementById('fsDuration').value = `${SLOT_DURATION_MIN} Minuten`;
-    document.getElementById('fsSubject').value = `Neue Terminbuchung am ${ds} um ${state.selectedSlot}`;
-
-    const autoText = `Vielen Dank fuer Ihre Terminbuchung. Termin: ${ds}, ${state.selectedSlot} - ${endStr} Uhr. Bei Rueckfragen antworten Sie bitte auf diese E-Mail.`;
-    document.getElementById('fsAutoresponse').value = autoText;
-
-    document.getElementById('fsIcs').value = createIcsText({
-        date: fmtDate(state.selectedDate),
-        startTime: state.selectedSlot,
-        endTime: endStr,
-        title: mt ? mt.name : 'Beratungstermin',
-        description: 'Terminbestaetigung Dr. Dirk Koetting'
-    });
+    document.getElementById('formSummary').innerHTML = `
+        <span class="icon-cal">&#128197;</span>
+        <div class="summary-details">
+            <strong>${mt ? mt.name : 'Termin'} - ${SLOT_DURATION_MIN} Min.</strong>
+            <span>${ds}<br>${state.selectedSlot} - ${endStr} Uhr</span>
+        </div>`;
 
     document.getElementById('bookingOverlay').classList.add('visible');
 }
 
 function closeBookingForm() {
     document.getElementById('bookingOverlay').classList.remove('visible');
-    document.getElementById('bookingForm').reset();
+    ['fName','fEmail','fPhone','fCompany','fNotes'].forEach(id => document.getElementById(id).value = '');
+    document.getElementById('fTopic').value = '';
     document.querySelectorAll('.error-msg').forEach(e => e.classList.remove('visible'));
     document.querySelectorAll('.form-input.error').forEach(e => e.classList.remove('error'));
-    document.getElementById('submitBtn').disabled = false;
-    document.getElementById('submitBtn').innerHTML = 'Termin bestaetigen';
+    const btn = document.getElementById('submitBtn');
+    btn.disabled = false;
+    btn.innerHTML = 'Termin bestaetigen';
 }
 
-function submitBooking(e) {
-    e.preventDefault();
-    let valid = true;
-
-    const name = document.getElementById('fName').value.trim();
+async function submitBooking() {
+    const name  = document.getElementById('fName').value.trim();
     const email = document.getElementById('fEmail').value.trim();
     const topic = document.getElementById('fTopic').value;
+    let valid = true;
 
     if (!name) {
         document.getElementById('errName').classList.add('visible');
@@ -655,145 +696,149 @@ function submitBooking(e) {
         document.getElementById('fEmail').classList.remove('error');
     }
 
-    if (!valid) return;
+    if (!topic) {
+        document.getElementById('errTopic').classList.add('visible');
+        document.getElementById('fTopic').classList.add('error');
+        valid = false;
+    } else {
+        document.getElementById('errTopic').classList.remove('visible');
+        document.getElementById('fTopic').classList.remove('error');
+    }
 
-    document.getElementById('fsReplyTo').value = email;
+    if (!valid) return;
 
     const btn = document.getElementById('submitBtn');
     btn.disabled = true;
     btn.innerHTML = '<span class="spinner"></span>Wird gesendet...';
 
-    const formData = new FormData(document.getElementById('bookingForm'));
-
-    fetch(FORMSUBMIT_URL, {
-        method: 'POST',
-        headers: { 'Accept': 'application/json' },
-        body: formData
-    })
-    .then(() => finishBooking(name, email, topic))
-    .catch(() => finishBooking(name, email, topic));
-}
-
-function finishBooking(name, email, topic) {
     const mt = state.meetingTypes.find(m => m.id === state.selectedMeetingType);
     const endStr = addMinutes(state.selectedSlot, SLOT_DURATION_MIN);
+    const ds = state.selectedDate.toLocaleDateString('de-DE',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
 
-    const booking = {
-        id: Date.now(),
+    const payload = {
         date: fmtDate(state.selectedDate),
         time: state.selectedSlot,
-        endTime: endStr,
-        meetingType: state.selectedMeetingType,
-        meetingTypeName: mt ? mt.name : 'Beratungstermin',
-        duration: SLOT_DURATION_MIN,
+        end_time: endStr,
+        meeting_type: mt ? mt.name : 'Beratungstermin',
         name,
         email,
+        phone: document.getElementById('fPhone').value.trim(),
+        company: document.getElementById('fCompany').value.trim(),
         topic,
-        createdAt: new Date().toISOString()
+        notes: document.getElementById('fNotes').value.trim()
     };
 
-    state.bookings.push(booking);
-    state.lastBooking = booking;
-    saveBookings();
+    try {
+        const res = await fetch(APPS_SCRIPT_URL, {
+            method: 'POST',
+            body: JSON.stringify(payload)
+        });
+        const data = await res.json();
 
-    closeBookingForm();
+        if (data.success === false) {
+            btn.disabled = false;
+            btn.innerHTML = 'Termin bestaetigen';
+            alert('Fehler: ' + (data.error || 'Unbekannter Fehler'));
+            return;
+        }
 
-    const ds = state.selectedDate.toLocaleDateString('de-DE',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
-    document.getElementById('successDetails').textContent = `${booking.meetingTypeName} am ${ds}, ${booking.time} - ${booking.endTime} Uhr. Bestaetigung wurde an ${email} versendet.`;
-    document.getElementById('successOverlay').classList.add('visible');
+        const newKey = `${payload.date} ${payload.time}`;
+        state.bookedSlots.push({ date: payload.date, time: payload.time, key: newKey });
+        state.bookedSlotKeys.add(newKey);
 
-    state.selectedSlot = null;
-    renderCalendar();
-    renderTimeslots();
-    renderBookingsList();
+        state.lastBooking = { ...payload, endTime: endStr, dateLabel: ds, meetingTypeName: mt ? mt.name : 'Beratungstermin' };
+
+        closeBookingForm();
+        document.getElementById('successDetails').textContent =
+            `${mt ? mt.name : 'Termin'} am ${ds}, ${payload.time} - ${endStr} Uhr. Bestaetigung wurde an ${email} versendet.`;
+        document.getElementById('successOverlay').classList.add('visible');
+
+        state.selectedSlot = null;
+        renderCalendar();
+        renderTimeslots();
+
+        setTimeout(loadBookedSlots, 5000);
+
+    } catch(err) {
+        console.error('Buchungsfehler:', err);
+        btn.disabled = false;
+        btn.innerHTML = 'Termin bestaetigen';
+        alert('Verbindungsfehler. Bitte erneut versuchen.');
+    }
 }
 
 function closeSuccess() {
     document.getElementById('successOverlay').classList.remove('visible');
 }
 
+// -------------------------------------------------------
+// ICS DOWNLOAD
+// -------------------------------------------------------
 function toIcsDate(dateStr, timeStr) {
     const [y,m,d] = dateStr.split('-').map(Number);
     const [hh,mm] = timeStr.split(':').map(Number);
     const dt = new Date(Date.UTC(y, m-1, d, hh, mm, 0));
-    const yyyy = dt.getUTCFullYear();
-    const MM = String(dt.getUTCMonth()+1).padStart(2,'0');
-    const DD = String(dt.getUTCDate()).padStart(2,'0');
-    const HH = String(dt.getUTCHours()).padStart(2,'0');
-    const MI = String(dt.getUTCMinutes()).padStart(2,'0');
-    const SS = String(dt.getUTCSeconds()).padStart(2,'0');
-    return `${yyyy}${MM}${DD}T${HH}${MI}${SS}Z`;
-}
-
-function createIcsText(data) {
-    const uid = `${Date.now()}@dr-dirkinstitute.org`;
-    const dtStamp = toIcsDate(data.date, data.startTime);
-    const dtStart = toIcsDate(data.date, data.startTime);
-    const dtEnd = toIcsDate(data.date, data.endTime);
-
-    return [
-        'BEGIN:VCALENDAR',
-        'VERSION:2.0',
-        'PRODID:-//Dr Dirk Institute//Terminbuchung//DE',
-        'CALSCALE:GREGORIAN',
-        'METHOD:PUBLISH',
-        'BEGIN:VEVENT',
-        `UID:${uid}`,
-        `DTSTAMP:${dtStamp}`,
-        `DTSTART:${dtStart}`,
-        `DTEND:${dtEnd}`,
-        `SUMMARY:${data.title}`,
-        `DESCRIPTION:${data.description}`,
-        'LOCATION:Online',
-        'STATUS:CONFIRMED',
-        'END:VEVENT',
-        'END:VCALENDAR'
-    ].join('\r\n');
+    return `${dt.getUTCFullYear()}${String(dt.getUTCMonth()+1).padStart(2,'0')}${String(dt.getUTCDate()).padStart(2,'0')}T${String(dt.getUTCHours()).padStart(2,'0')}${String(dt.getUTCMinutes()).padStart(2,'0')}00Z`;
 }
 
 function downloadIcs() {
     if (!state.lastBooking) return;
 
-    const ics = createIcsText({
-        date: state.lastBooking.date,
-        startTime: state.lastBooking.time,
-        endTime: state.lastBooking.endTime,
-        title: state.lastBooking.meetingTypeName,
-        description: `Termin mit ${state.lastBooking.name}`
-    });
+    const b = state.lastBooking;
+    const ics = [
+        'BEGIN:VCALENDAR','VERSION:2.0',
+        'PRODID:-//Dr Dirk Institute//Terminbuchung//DE',
+        'CALSCALE:GREGORIAN','METHOD:PUBLISH',
+        'BEGIN:VEVENT',
+        `UID:${Date.now()}@dr-dirkinstitute.org`,
+        `DTSTAMP:${toIcsDate(b.date, b.time)}`,
+        `DTSTART:${toIcsDate(b.date, b.time)}`,
+        `DTEND:${toIcsDate(b.date, b.endTime)}`,
+        `SUMMARY:${b.meetingTypeName} - Dr. Dirk Koetting`,
+        `DESCRIPTION:Termin mit ${b.name}`,
+        'LOCATION:Online','STATUS:CONFIRMED',
+        'END:VEVENT','END:VCALENDAR'
+    ].join('\r\n');
 
-    const blob = new Blob([ics], { type: 'text/calendar;charset=utf-8' });
+    const blob = new Blob([ics], { type:'text/calendar;charset=utf-8' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `Termin-${state.lastBooking.date}-${state.lastBooking.time.replace(':','')}.ics`;
+    a.download = `Termin-${b.date}-${b.time.replace(':','')}.ics`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
 }
 
+// -------------------------------------------------------
+// KALENDER NAVIGATION
+// -------------------------------------------------------
 function changeMonth(delta) {
     state.currentMonth += delta;
     if (state.currentMonth > 11) { state.currentMonth = 0; state.currentYear++; }
-    if (state.currentMonth < 0) { state.currentMonth = 11; state.currentYear--; }
+    if (state.currentMonth < 0)  { state.currentMonth = 11; state.currentYear--; }
     state.selectedDate = null;
     state.selectedSlot = null;
     renderCalendar();
     renderTimeslots();
 }
 
+// -------------------------------------------------------
+// ADMIN
+// -------------------------------------------------------
 function toggleAdmin() {
     document.getElementById('adminOverlay').classList.toggle('visible');
     if (document.getElementById('adminOverlay').classList.contains('visible')) {
         renderAvailabilityGrid();
-        renderBookingsList();
+        renderAdminBookings();
     }
 }
 
 function renderAvailabilityGrid() {
     const g = document.getElementById('availabilityGrid');
     g.innerHTML = '';
+
     ['Montag','Dienstag','Mittwoch','Donnerstag','Freitag','Samstag','Sonntag'].forEach((day,i) => {
         const av = state.availability[i];
         const row = document.createElement('div');
@@ -811,35 +856,40 @@ function saveAvailability() {
             end: document.getElementById(`avE${i}`).value
         };
     }
+
     renderCalendar();
     if (state.selectedDate) renderTimeslots();
     toggleAdmin();
 }
 
-function renderBookingsList() {
+function renderAdminBookings() {
     const l = document.getElementById('bookingsList');
-    if (!state.bookings.length) {
-        l.innerHTML = '<div class="no-bookings">Noch keine Buchungen vorhanden</div>';
+
+    if (!state.bookedSlots.length) {
+        l.innerHTML = '<div class="no-bookings">Keine Buchungen vorhanden</div>';
         return;
     }
 
     l.innerHTML = '';
-    [...state.bookings].sort((a,b) => (a.date+a.time).localeCompare(b.date+b.time)).forEach(b => {
-        const item = document.createElement('div');
-        item.className = 'booking-item';
-        const d = new Date(b.date+'T00:00:00');
-        const ds = d.toLocaleDateString('de-DE',{weekday:'short',day:'numeric',month:'short',year:'numeric'});
-        item.innerHTML = `<strong>${b.name} - ${b.meetingTypeName}</strong><span>${ds}, ${b.time} Uhr · ${b.email}${b.topic ? ' · ' + b.topic : ''}</span>`;
-        l.appendChild(item);
-    });
+    [...state.bookedSlots]
+        .sort((a,b) => (a.date + a.time).localeCompare(b.date + b.time))
+        .forEach(b => {
+            const item = document.createElement('div');
+            item.className = 'booking-item';
+            const d = new Date(b.date + 'T00:00:00');
+            const ds = d.toLocaleDateString('de-DE',{weekday:'short',day:'numeric',month:'short',year:'numeric'});
+            item.innerHTML = `<strong>${ds}, ${b.time} Uhr</strong><span>gesperrt</span>`;
+            l.appendChild(item);
+        });
 }
 
-loadBookings();
+// -------------------------------------------------------
+// INIT
+// -------------------------------------------------------
 renderMeetingTypes();
 renderCalendar();
 renderTimeslots();
-renderBookingsList();
+loadBookedSlots();
 </script>
 </body>
 </html>
-

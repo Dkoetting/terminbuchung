@@ -1,0 +1,8 @@
+Neue Bereitstellung
+Bereitstellung wurde aktualisiert.
+Version 1 am 11.03.2026, 13:40
+Bereitstellungs-ID
+AKfycbz-v5-OWq3T1Pl_RGH-jPLuhj3rAjSam8bD_z-z_5ynS7OqQApvd0mcHMQlUPInK3YX
+Web-App
+URL
+https://script.google.com/macros/s/AKfycbz-v5-OWq3T1Pl_RGH-jPLuhj3rAjSam8bD_z-z_5ynS7OqQApvd0mcHMQlUPInK3YX/exec
