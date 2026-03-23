@@ -86,7 +86,8 @@
         .loading-bar.done { width:100%; opacity:0; transition:width 0.2s ease, opacity 0.4s ease 0.2s; }
 
         .profile-header { text-align:center; margin-bottom:32px; }
-        .profile-avatar { width:72px; height:72px; border-radius:50%; background:var(--color-primary); color:var(--color-btn-primary-text); display:inline-flex; align-items:center; justify-content:center; font-size:28px; font-weight:600; margin-bottom:12px; }
+        .profile-avatar { width:160px; height:auto; display:inline-flex; align-items:center; justify-content:center; margin-bottom:16px; overflow:hidden; }
+        .profile-avatar img { width:100%; height:auto; object-fit:contain; }
         .profile-header h1 { font-size:24px; font-weight:600; margin:0 0 4px; letter-spacing:-0.01em; }
         .profile-header p { color:var(--color-text-secondary); margin:0; font-size:14px; }
 
@@ -207,7 +208,7 @@
 
 <div class="app-wrapper">
     <header class="profile-header">
-        <div class="profile-avatar">DK</div>
+        <div class="profile-avatar"><img src="assets/Logo.jpg" alt="Dr. Dirk Koetting Logo"></div>
         <h1>Dr. Dirk Koetting</h1>
         <p>IT Governance &amp; AI Policy Beratung</p>
         <div class="sync-badge">
