@@ -284,6 +284,7 @@
                     <option value="IT Governance / ISMS">IT Governance / ISMS</option>
                     <option value="Interim Management">Interim Management</option>
                     <option value="Sourcing / Transitions">Sourcing / Transitions / Carve Out / Sparring</option>
+                    <option value="GPT Vault Session">GPT Vault – Gefuehrte Session (TeamViewer)</option>
                     <option value="Sonstiges">Sonstiges</option>
                 </select>
                 <div class="error-msg" id="errTopic">Bitte waehlen Sie ein Thema</div>
@@ -356,8 +357,9 @@ let state = {
     bookedSlotKeys: new Set(),
     lastBooking: null,
     meetingTypes: [
-        { id:'erstgespraech', name:'Erstgespraech', duration:30, color:'#21808d' },
-        { id:'beratung', name:'Beratungstermin', duration:30, color:'#5e5240' }
+        { id:'erstgespraech', name:'Erstgesprach',                  duration:30, color:'#21808d' },
+        { id:'beratung',      name:'Beratungstermin',               duration:30, color:'#5e5240' },
+        { id:'session',       name:'Gefuehrte Session (TeamViewer)', duration:60, color:'#1d4ed8' }
     ],
     availability: {
         0:{ enabled:true,  start:'16:00', end:'17:30' },
@@ -886,6 +888,23 @@ function renderAdminBookings() {
 // -------------------------------------------------------
 // INIT
 // -------------------------------------------------------
+
+// Pre-select meeting type from URL param, e.g. ?type=session
+(function() {
+    const params = new URLSearchParams(window.location.search);
+    const typeParam = params.get('type');
+    if (typeParam) {
+        const match = state.meetingTypes.find(mt => mt.id === typeParam);
+        if (match) state.selectedMeetingType = match.id;
+    }
+    // Pre-select topic from URL param, e.g. ?topic=GPT+Vault+Session
+    const topicParam = params.get('topic');
+    if (topicParam) {
+        const sel = document.getElementById('fTopic');
+        if (sel) sel.value = topicParam;
+    }
+})();
+
 renderMeetingTypes();
 renderCalendar();
 renderTimeslots();
