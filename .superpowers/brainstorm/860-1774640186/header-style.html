@@ -1,0 +1,86 @@
+<h2>Header-Stil für Terminbuchung</h2>
+<p class="subtitle">Welches Look & Feel passt besser zum Buchungs-Tool?</p>
+
+<div class="cards">
+
+  <!-- Option A: Branded Bar like be-ai-safe -->
+  <div class="card" data-choice="a" onclick="toggleSelect(this)">
+    <div class="card-image" style="padding:0;overflow:hidden;">
+      <div style="background:#1e3a8a;padding:10px 20px;display:flex;align-items:center;justify-content:space-between;">
+        <div style="color:#fff;font-size:11px;font-weight:700;letter-spacing:1px;opacity:0.85;">K&amp;N EDVKONZEPTE</div>
+        <div style="color:#fff;font-size:11px;font-weight:700;letter-spacing:1px;opacity:0.85;">Dr. DirKI</div>
+      </div>
+      <div style="background:radial-gradient(circle at 10% 0%,#e8efff,#f5f7fb 45%);padding:20px;text-align:center;">
+        <div style="width:50px;height:50px;background:#2563eb;border-radius:50%;margin:0 auto 8px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:16px;">DK</div>
+        <div style="font-size:15px;font-weight:700;color:#1e3a8a;">Dr. Dirk Koetting</div>
+        <div style="font-size:11px;color:#64748b;margin-top:2px;">IT Governance &amp; AI Policy Beratung</div>
+        <div style="background:#dbe3f0;border-radius:20px;padding:3px 12px;display:inline-flex;align-items:center;gap:6px;margin-top:8px;font-size:10px;color:#2563eb;">
+          <span style="width:6px;height:6px;border-radius:50%;background:#22c55e;display:inline-block;"></span> Verfügbar
+        </div>
+      </div>
+      <!-- mini calendar mockup -->
+      <div style="background:#fff;margin:0 12px 12px;border-radius:8px;border:1px solid #dbe3f0;padding:10px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+          <span style="font-size:10px;font-weight:600;color:#1e3a8a;">April 2026</span>
+          <div style="display:flex;gap:4px;">
+            <span style="width:20px;height:20px;border:1px solid #dbe3f0;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:10px;color:#64748b;">‹</span>
+            <span style="width:20px;height:20px;border:1px solid #dbe3f0;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:10px;color:#64748b;">›</span>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:2px;text-align:center;">
+          <span style="font-size:8px;color:#64748b;font-weight:600;">Mo</span><span style="font-size:8px;color:#64748b;font-weight:600;">Di</span><span style="font-size:8px;color:#64748b;font-weight:600;">Mi</span><span style="font-size:8px;color:#64748b;font-weight:600;">Do</span><span style="font-size:8px;color:#64748b;font-weight:600;">Fr</span><span style="font-size:8px;color:#64748b;font-weight:600;">Sa</span><span style="font-size:8px;color:#64748b;font-weight:600;">So</span>
+          <span style="font-size:9px;padding:2px;border-radius:3px;color:#94a3b8;">31</span><span style="font-size:9px;padding:2px;border-radius:3px;color:#1e293b;">1</span><span style="font-size:9px;padding:2px;border-radius:3px;color:#1e293b;">2</span><span style="font-size:9px;padding:2px;border-radius:3px;color:#1e293b;">3</span><span style="font-size:9px;padding:2px;border-radius:3px;color:#1e293b;">4</span><span style="font-size:9px;padding:2px;border-radius:3px;color:#94a3b8;opacity:0.4;">5</span><span style="font-size:9px;padding:2px;border-radius:3px;color:#94a3b8;opacity:0.4;">6</span>
+          <span style="font-size:9px;padding:2px;border-radius:3px;color:#1e293b;">7</span><span style="font-size:9px;padding:2px;border-radius:3px;background:#2563eb;color:#fff;font-weight:700;border-radius:4px;">8</span><span style="font-size:9px;padding:2px;border-radius:3px;color:#1e293b;">9</span><span style="font-size:9px;padding:2px;border-radius:3px;color:#1e293b;">10</span><span style="font-size:9px;padding:2px;border-radius:3px;color:#1e293b;">11</span><span style="font-size:9px;padding:2px;border-radius:3px;color:#94a3b8;opacity:0.4;">12</span><span style="font-size:9px;padding:2px;border-radius:3px;color:#94a3b8;opacity:0.4;">13</span>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>A – Branded Header Bar</h3>
+      <p>Dunkle Navy-Leiste oben (wie be-ai-safe/policy-preview) mit K&amp;N links / Dr. DirK rechts. GPT-Vault-Blau (#2563eb) als Primärfarbe, bg #f5f7fb mit Gradient.</p>
+    </div>
+  </div>
+
+  <!-- Option B: Clean professional, centered logo -->
+  <div class="card" data-choice="b" onclick="toggleSelect(this)">
+    <div class="card-image" style="padding:0;overflow:hidden;">
+      <div style="background:#f5f7fb;padding:20px;text-align:center;border-bottom:1px solid #dbe3f0;">
+        <div style="display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:8px;">
+          <div style="font-size:10px;font-weight:700;color:#1e3a8a;letter-spacing:1px;">K&amp;N</div>
+          <div style="width:1px;height:24px;background:#dbe3f0;"></div>
+          <div style="font-size:10px;font-weight:700;color:#2563eb;">Dr. DirKI</div>
+        </div>
+        <div style="font-size:15px;font-weight:700;color:#1e3a8a;">Terminbuchung</div>
+        <div style="font-size:11px;color:#64748b;">Dr. Dirk Koetting · IT Governance &amp; AI</div>
+      </div>
+      <div style="background:#fff;padding:12px;">
+        <!-- meeting type cards -->
+        <div style="display:flex;gap:6px;margin-bottom:10px;">
+          <div style="flex:1;border:2px solid #2563eb;border-radius:8px;padding:8px;background:#eff6ff;">
+            <div style="font-size:9px;font-weight:700;color:#1e3a8a;">Erstgespräch</div>
+            <div style="font-size:8px;color:#64748b;">30 Min · kostenlos</div>
+          </div>
+          <div style="flex:1;border:1px solid #dbe3f0;border-radius:8px;padding:8px;">
+            <div style="font-size:9px;font-weight:700;color:#1e293b;">KI-Strategie</div>
+            <div style="font-size:8px;color:#64748b;">60 Min · €</div>
+          </div>
+          <div style="flex:1;border:1px solid #dbe3f0;border-radius:8px;padding:8px;">
+            <div style="font-size:9px;font-weight:700;color:#1e293b;">Policy Review</div>
+            <div style="font-size:8px;color:#64748b;">45 Min · €</div>
+          </div>
+        </div>
+        <!-- mini calendar -->
+        <div style="background:#f5f7fb;border-radius:8px;border:1px solid #dbe3f0;padding:8px;">
+          <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:2px;text-align:center;">
+            <span style="font-size:8px;color:#64748b;">Mo</span><span style="font-size:8px;color:#64748b;">Di</span><span style="font-size:8px;color:#64748b;">Mi</span><span style="font-size:8px;color:#64748b;">Do</span><span style="font-size:8px;color:#64748b;">Fr</span><span style="font-size:8px;color:#64748b;">Sa</span><span style="font-size:8px;color:#64748b;">So</span>
+            <span style="font-size:9px;color:#1e293b;">7</span><span style="font-size:9px;background:#2563eb;color:#fff;border-radius:4px;font-weight:700;padding:1px 0;">8</span><span style="font-size:9px;color:#1e293b;">9</span><span style="font-size:9px;color:#1e293b;">10</span><span style="font-size:9px;color:#1e293b;">11</span><span style="font-size:9px;color:#94a3b8;opacity:0.4;">12</span><span style="font-size:9px;color:#94a3b8;opacity:0.4;">13</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>B – Clean / Professional</h3>
+      <p>Kein dunkler Header-Balken. Heller #f5f7fb-Hintergrund mit zentriertem Logo-Header. Beide Logos nebeneinander (K&amp;N | Dr. DirK), Separator. Wirkt bookingapp-typisch.</p>
+    </div>
+  </div>
+
+</div>

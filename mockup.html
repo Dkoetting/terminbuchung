@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dr. Dirk Kötting – Gespräch anfragen</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg: #f5f7fb;
+    --bg-grad: radial-gradient(circle at 10% 0%, #e8efff, #f5f7fb 45%);
+    --primary: #2563eb;
+    --dark: #1e3a8a;
+    --border: #dbe3f0;
+    --text: #1e293b;
+    --muted: #64748b;
+    --surface: #ffffff;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: var(--bg);
+    background-image: var(--bg-grad);
+    min-height: 100vh;
+    color: var(--text);
+    position: relative;
+    overflow-x: hidden;
+  }
+
+  /* Watermark */
+  body::before {
+    content: '';
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 480px;
+    height: 480px;
+    background: url('assets/logo-dirk.jpg') center/contain no-repeat;
+    opacity: 0.055;
+    filter: grayscale(100%);
+    mix-blend-mode: multiply;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* Header */
+  header {
+    background: var(--dark);
+    padding: 0 40px;
+    height: 72px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+    z-index: 10;
+    box-shadow: 0 2px 12px rgba(30,58,138,0.3);
+  }
+
+  .logo-wrap {
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 8px;
+    padding: 6px 14px;
+    display: flex;
+    align-items: center;
+  }
+
+  .logo-left {
+    height: 40px;
+    max-width: 180px;
+    object-fit: contain;
+  }
+
+  .logo-right {
+    height: 30px;
+    max-width: 200px;
+    object-fit: contain;
+  }
+
+  /* Main */
+  main {
+    position: relative;
+    z-index: 1;
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 56px 24px 80px;
+  }
+
+  /* Profile strip */
+  .profile-strip {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 40px;
+    padding: 20px 24px;
+    background: var(--surface);
+    border: 1.5px solid var(--border);
+    border-radius: 16px;
+    box-shadow: 0 2px 12px rgba(30,58,138,0.06);
+  }
+
+  .profile-avatar {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--border);
+    flex-shrink: 0;
+  }
+
+  .profile-info strong {
+    display: block;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--dark);
+  }
+
+  .profile-info span {
+    font-size: 13px;
+    color: var(--muted);
+  }
+
+  .avail-badge {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #16a34a;
+    background: rgba(22,163,74,0.08);
+    border: 1px solid rgba(22,163,74,0.2);
+    border-radius: 100px;
+    padding: 5px 14px;
+    white-space: nowrap;
+  }
+
+  .avail-dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: #16a34a;
+    animation: pulse 2s infinite;
+    flex-shrink: 0;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+
+  /* Tag + Hero */
+  .tag {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--primary);
+    background: rgba(37,99,235,0.09);
+    border: 1px solid rgba(37,99,235,0.2);
+    border-radius: 100px;
+    padding: 4px 14px;
+    margin-bottom: 20px;
+  }
+
+  h1 {
+    font-size: clamp(26px, 4vw, 40px);
+    font-weight: 800;
+    color: var(--dark);
+    line-height: 1.2;
+    margin-bottom: 14px;
+    letter-spacing: -0.02em;
+  }
+
+  .subtitle {
+    font-size: 16px;
+    color: var(--muted);
+    line-height: 1.65;
+    max-width: 580px;
+    margin-bottom: 44px;
+  }
+
+  /* Topics */
+  .section-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 14px;
+  }
+
+  .topics {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+    margin-bottom: 44px;
+  }
+
+  .topic-card {
+    background: var(--surface);
+    border: 1.5px solid var(--border);
+    border-radius: 14px;
+    padding: 22px 18px;
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+  }
+
+  .topic-card:hover {
+    border-color: var(--primary);
+    box-shadow: 0 4px 20px rgba(37,99,235,0.12);
+    transform: translateY(-2px);
+  }
+
+  .topic-card.active {
+    border-color: var(--primary);
+    background: rgba(37,99,235,0.04);
+    box-shadow: 0 4px 20px rgba(37,99,235,0.15);
+  }
+
+  .topic-check {
+    position: absolute;
+    top: 12px; right: 12px;
+    width: 20px; height: 20px;
+    border-radius: 50%;
+    background: rgba(37,99,235,0.12);
+    color: var(--primary);
+    font-size: 11px;
+    font-weight: 700;
+    display: none;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .topic-card.active .topic-check { display: flex; }
+
+  .topic-duration {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--primary);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 8px;
+  }
+
+  .topic-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--dark);
+    margin-bottom: 6px;
+    line-height: 1.3;
+  }
+
+  .topic-desc {
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+
+  /* Form */
+  .form-card {
+    background: var(--surface);
+    border: 1.5px solid var(--border);
+    border-radius: 18px;
+    padding: 36px 40px;
+    box-shadow: 0 4px 24px rgba(30,58,138,0.07);
+  }
+
+  .form-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--dark);
+    margin-bottom: 4px;
+  }
+
+  .form-sub {
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 28px;
+  }
+
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin-bottom: 14px;
+  }
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text);
+    letter-spacing: 0.01em;
+  }
+
+  label .req { color: var(--primary); margin-left: 2px; }
+
+  input, textarea {
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    padding: 10px 14px;
+    font-size: 14px;
+    color: var(--text);
+    background: #fafbfe;
+    font-family: inherit;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    outline: none;
+  }
+
+  input:focus, textarea:focus {
+    border-color: var(--primary);
+    background: #fff;
+    box-shadow: 0 0 0 3px rgba(37,99,235,0.08);
+  }
+
+  textarea { resize: vertical; min-height: 80px; }
+
+  /* Time preference chips */
+  .time-chips {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    margin-top: 4px;
+  }
+
+  .chip {
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    padding: 9px 6px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--muted);
+    text-align: center;
+    cursor: pointer;
+    background: #fafbfe;
+    transition: all 0.15s;
+  }
+
+  .chip:hover { border-color: var(--primary); color: var(--primary); }
+  .chip.active {
+    border-color: var(--primary);
+    color: var(--primary);
+    background: rgba(37,99,235,0.07);
+  }
+
+  /* Submit */
+  .btn-submit {
+    width: 100%;
+    padding: 14px;
+    background: var(--primary);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    margin-top: 24px;
+    letter-spacing: 0.01em;
+    transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+  }
+
+  .btn-submit:hover {
+    background: var(--dark);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 16px rgba(30,58,138,0.3);
+  }
+
+  .submit-note {
+    text-align: center;
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 10px;
+  }
+
+  .submit-note strong { color: var(--primary); }
+
+  @media (max-width: 640px) {
+    .topics { grid-template-columns: 1fr; }
+    .form-row { grid-template-columns: 1fr; }
+    .form-card { padding: 24px 20px; }
+    .time-chips { grid-template-columns: repeat(2, 1fr); }
+    header { padding: 0 20px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo-wrap">
+    <img src="assets/kn_logo.png" class="logo-left" alt="K&N">
+  </div>
+  <div class="logo-wrap">
+    <img src="assets/DrDirKInstitute.png" class="logo-right" alt="Dr. DirKInstitute">
+  </div>
+</header>
+
+<main>
+
+  <!-- Profile -->
+  <div class="profile-strip">
+    <img src="assets/logo-dirk.jpg" class="profile-avatar" alt="Dr. Dirk Kötting">
+    <div class="profile-info">
+      <strong>Dr. Dirk Kötting</strong>
+      <span>IT Governance · AI Policy · KI-Entscheidungssicherheit</span>
+    </div>
+    <div class="avail-badge">
+      <span class="avail-dot"></span>
+      Gespräche verfügbar
+    </div>
+  </div>
+
+  <div class="tag">KI Governance · Entscheidungssicherheit</div>
+
+  <h1>Persönliches Gespräch<br>auf Entscheider-Ebene</h1>
+  <p class="subtitle">
+    Kein allgemeines Webinar. Kein Sales-Call.<br>
+    Ein strukturiertes Gespräch zu Ihrem konkreten KI-Thema –
+    direkt mit Dr. Dirk Kötting.
+  </p>
+
+  <!-- Topic cards -->
+  <div class="section-label">Wählen Sie Ihr Thema</div>
+  <div class="topics">
+
+    <div class="topic-card active" onclick="selectTopic(this)">
+      <span class="topic-check">✓</span>
+      <div class="topic-duration">30 Minuten</div>
+      <div class="topic-title">AI Governance Briefing</div>
+      <div class="topic-desc">Schnellorientierung: Wo steht Ihr Unternehmen regulatorisch und operativ?</div>
+    </div>
+
+    <div class="topic-card" onclick="selectTopic(this)">
+      <span class="topic-check">✓</span>
+      <div class="topic-duration">45 Minuten</div>
+      <div class="topic-title">KI-Strategiegespräch</div>
+      <div class="topic-desc">Analyse Ihrer KI-Entscheidungslage mit konkreten Handlungsempfehlungen.</div>
+    </div>
+
+    <div class="topic-card" onclick="selectTopic(this)">
+      <span class="topic-check">✓</span>
+      <div class="topic-duration">60 Minuten</div>
+      <div class="topic-title">Policy & Compliance Review</div>
+      <div class="topic-desc">Tiefenprüfung Ihrer KI-Richtlinien gegen EU AI Act und Governance-Standards.</div>
+    </div>
+
+  </div>
+
+  <!-- Form -->
+  <div class="form-card">
+    <div class="form-title">Ihre Anfrage</div>
+    <div class="form-sub">Sie erhalten innerhalb von 24 Stunden einen persönlichen Terminlink.</div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label>Name <span class="req">*</span></label>
+        <input type="text" placeholder="Ihr vollständiger Name">
+      </div>
+      <div class="form-group">
+        <label>Unternehmen <span class="req">*</span></label>
+        <input type="text" placeholder="Ihre Organisation">
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label>Position</label>
+        <input type="text" placeholder="z.B. CIO, CDO, Vorstand IT">
+      </div>
+      <div class="form-group">
+        <label>E-Mail <span class="req">*</span></label>
+        <input type="email" placeholder="ihre@email.de">
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label>Telefon</label>
+        <input type="tel" placeholder="+49 …">
+      </div>
+      <div class="form-group">
+        <label>Zeitpräferenz</label>
+        <div class="time-chips">
+          <div class="chip active" onclick="selectChip(this)">Diese Woche</div>
+          <div class="chip" onclick="selectChip(this)">Nächste Woche</div>
+          <div class="chip" onclick="selectChip(this)">2–3 Wochen</div>
+          <div class="chip" onclick="selectChip(this)">Flexibel</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group" style="margin-top:6px">
+      <label>Ihr konkretes Anliegen</label>
+      <textarea placeholder="Was beschäftigt Sie aktuell? Was soll das Gespräch bringen?"></textarea>
+    </div>
+
+    <button class="btn-submit">Gespräch anfragen →</button>
+    <div class="submit-note">
+      Keine Registrierung &nbsp;·&nbsp; <strong>Persönliche Antwort in 24h</strong> &nbsp;·&nbsp; Keine Verpflichtung
+    </div>
+  </div>
+
+</main>
+
+<script>
+  function selectTopic(el) {
+    document.querySelectorAll('.topic-card').forEach(c => c.classList.remove('active'));
+    el.classList.add('active');
+  }
+  function selectChip(el) {
+    document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+    el.classList.add('active');
+  }
+</script>
+
+</body>
+</html>

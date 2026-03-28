@@ -284,6 +284,12 @@ textarea.form-input { resize:vertical; min-height:90px; }
 .spinner { display:inline-block; width:14px; height:14px; border:2px solid rgba(255,255,255,0.4); border-right-color:transparent; border-radius:50%; animation:spin 0.6s linear infinite; margin-right:8px; vertical-align:middle; }
 @keyframes spin { to { transform:rotate(360deg); } }
 
+/* ─── LANG TOGGLE ─── */
+.lang-toggle { display:flex; gap:3px; background:rgba(255,255,255,0.1); border-radius:8px; padding:4px; }
+.lang-btn { font-size:11px; font-weight:700; color:rgba(255,255,255,0.55); background:transparent; border:none; cursor:pointer; padding:4px 11px; border-radius:5px; letter-spacing:0.06em; transition:all 0.15s; font-family:inherit; }
+.lang-btn:hover { color:rgba(255,255,255,0.85); }
+.lang-btn.active { color:#1e3a8a; background:#fff; }
+
 /* Admin */
 .admin-toggle { position:fixed; bottom:20px; right:20px; z-index:50; width:44px; height:44px; border-radius:50%; background:var(--dark); color:#fff; border:none; cursor:pointer; font-size:18px; box-shadow:0 4px 16px rgba(30,58,138,0.2); display:flex; align-items:center; justify-content:center; opacity:0.5; transition:all 0.15s; }
 .admin-toggle:hover { opacity:1; transform:scale(1.05); }
@@ -324,6 +330,10 @@ textarea.form-input { resize:vertical; min-height:90px; }
 
 <header>
   <div class="logo-box"><img src="assets/kn_logo.png" class="logo-left" alt="K&N"></div>
+  <div class="lang-toggle">
+    <button class="lang-btn active" id="btnDE" onclick="setLang('de')">DE</button>
+    <button class="lang-btn" id="btnEN" onclick="setLang('en')">EN</button>
+  </div>
   <div class="logo-box"><img src="assets/logo-dirk.jpg" class="logo-right" alt="Dr. DirKInstitute"></div>
 </header>
 
@@ -348,30 +358,30 @@ textarea.form-input { resize:vertical; min-height:90px; }
   <p class="hero-sub" id="heroSub">Nicht jedes Thema braucht sofort einen Termin. Wählen Sie, was für Sie gerade passt.</p>
 
   <!-- Meeting type cards -->
-  <div class="section-label">Gesprächsformat wählen</div>
+  <div class="section-label" data-i18n="sectionLabel">Gesprächsformat wählen</div>
   <div class="meeting-types" id="meetingTypes"></div>
 
   <!-- Divider -->
   <div class="path-divider">
-    <span class="path-divider-label">Wie möchten Sie einsteigen?</span>
+    <span class="path-divider-label" data-i18n="pathDivider">Wie möchten Sie einsteigen?</span>
     <div class="path-divider-line"></div>
   </div>
 
   <!-- Path selector -->
   <div class="path-selector" id="pathSelector">
     <div class="path-card primary-path" id="pathAnfrage" onclick="selectPath('anfrage')">
-      <span class="path-badge recommended">Empfohlen</span>
+      <span class="path-badge recommended" data-i18n="pathAnfrageBadge">Empfohlen</span>
       <span class="path-icon">&#9993;</span>
-      <div class="path-title">Gespräch anfragen</div>
-      <div class="path-desc">Für komplexe Themen oder erste Einordnung. Sie erhalten eine persönliche Rückmeldung und einen passenden Terminvorschlag.</div>
-      <button class="path-btn btn-fill">Gespräch anfragen →</button>
+      <div class="path-title" data-i18n="pathAnfrageTitle">Gespräch anfragen</div>
+      <div class="path-desc" data-i18n="pathAnfrageDesc">Für komplexe Themen oder erste Einordnung. Sie erhalten eine persönliche Rückmeldung und einen passenden Terminvorschlag.</div>
+      <button class="path-btn btn-fill" data-i18n="pathAnfrageBtn">Gespräch anfragen →</button>
     </div>
     <div class="path-card" id="pathKalender" onclick="selectPath('kalender')">
-      <span class="path-badge direct">Direktbuchung</span>
+      <span class="path-badge direct" data-i18n="pathKalenderBadge">Direktbuchung</span>
       <span class="path-icon">&#128197;</span>
-      <div class="path-title">Direkt Termin buchen</div>
-      <div class="path-desc">Für konkrete Anliegen mit klarer Fragestellung. Wählen Sie direkt einen freien Termin im Kalender.</div>
-      <button class="path-btn btn-outline">Termin buchen →</button>
+      <div class="path-title" data-i18n="pathKalenderTitle">Direkt Termin buchen</div>
+      <div class="path-desc" data-i18n="pathKalenderDesc">Für konkrete Anliegen mit klarer Fragestellung. Wählen Sie direkt einen freien Termin im Kalender.</div>
+      <button class="path-btn btn-outline" data-i18n="pathKalenderBtn">Termin buchen →</button>
     </div>
   </div>
 
@@ -379,69 +389,69 @@ textarea.form-input { resize:vertical; min-height:90px; }
   <div class="anfrage-panel" id="anfragePanel">
     <button class="back-btn" onclick="goBack()">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
-      Zurück zur Auswahl
+      <span data-i18n="backBtn">Zurück zur Auswahl</span>
     </button>
     <div class="anfrage-card" id="anfrageForm">
-      <div class="anfrage-title">Ihr Anliegen – wir melden uns persönlich</div>
-      <div class="anfrage-sub">Sie erhalten innerhalb von 24 Stunden eine persönliche Rückmeldung und einen passenden Terminvorschlag.<br><strong>Keine Registrierung · Keine Verpflichtung</strong></div>
+      <div class="anfrage-title" data-i18n="anfrageTitle">Ihr Anliegen – wir melden uns persönlich</div>
+      <div class="anfrage-sub" data-i18n="anfrageSub">Sie erhalten innerhalb von 24 Stunden eine persönliche Rückmeldung und einen passenden Terminvorschlag.<br><strong>Keine Registrierung · Keine Verpflichtung</strong></div>
 
       <div class="form-row">
         <div class="form-group">
-          <label class="form-label">Name <span class="req">*</span></label>
-          <input class="form-input" type="text" id="afName" placeholder="Vor- und Nachname">
-          <div class="error-msg" id="afErrName">Bitte geben Sie Ihren Namen ein</div>
+          <label class="form-label"><span data-i18n="labelName">Name</span> <span class="req">*</span></label>
+          <input class="form-input" type="text" id="afName" placeholder="Vor- und Nachname" data-i18n-placeholder="placeholderName">
+          <div class="error-msg" id="afErrName" data-i18n="errName">Bitte geben Sie Ihren Namen ein</div>
         </div>
         <div class="form-group">
-          <label class="form-label">Unternehmen</label>
-          <input class="form-input" type="text" id="afCompany" placeholder="Ihre Organisation">
-        </div>
-      </div>
-      <div class="form-row">
-        <div class="form-group">
-          <label class="form-label">Position</label>
-          <input class="form-input" type="text" id="afPosition" placeholder="z.B. CIO, CDO, Vorstand IT">
-        </div>
-        <div class="form-group">
-          <label class="form-label">E-Mail <span class="req">*</span></label>
-          <input class="form-input" type="email" id="afEmail" placeholder="ihre@email.de">
-          <div class="error-msg" id="afErrEmail">Bitte gültige E-Mail eingeben</div>
+          <label class="form-label" data-i18n="labelCompany">Unternehmen</label>
+          <input class="form-input" type="text" id="afCompany" placeholder="Ihre Organisation" data-i18n-placeholder="placeholderCompany">
         </div>
       </div>
       <div class="form-row">
         <div class="form-group">
-          <label class="form-label">Telefon</label>
+          <label class="form-label" data-i18n="labelPosition">Position</label>
+          <input class="form-input" type="text" id="afPosition" placeholder="z.B. CIO, CDO, Vorstand IT" data-i18n-placeholder="placeholderPosition">
+        </div>
+        <div class="form-group">
+          <label class="form-label"><span data-i18n="labelEmail">E-Mail</span> <span class="req">*</span></label>
+          <input class="form-input" type="email" id="afEmail" placeholder="ihre@email.de" data-i18n-placeholder="placeholderEmail">
+          <div class="error-msg" id="afErrEmail" data-i18n="errEmail">Bitte gültige E-Mail eingeben</div>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label" data-i18n="labelPhone">Telefon</label>
           <input class="form-input" type="tel" id="afPhone" placeholder="+49 …">
         </div>
         <div class="form-group">
-          <label class="form-label">Zeitpräferenz</label>
+          <label class="form-label" data-i18n="labelTimePref">Zeitpräferenz</label>
           <div class="time-chips" id="anfrageChips">
-            <div class="chip" onclick="selectChip(this)">Diese Woche</div>
-            <div class="chip" onclick="selectChip(this)">Nächste Woche</div>
-            <div class="chip" onclick="selectChip(this)">2–3 Wochen</div>
-            <div class="chip active" onclick="selectChip(this)">Flexibel</div>
+            <div class="chip" data-i18n="chipWeek" onclick="selectChip(this)">Diese Woche</div>
+            <div class="chip" data-i18n="chipNextWeek" onclick="selectChip(this)">Nächste Woche</div>
+            <div class="chip" data-i18n="chip23Weeks" onclick="selectChip(this)">2–3 Wochen</div>
+            <div class="chip active" data-i18n="chipFlex" onclick="selectChip(this)">Flexibel</div>
           </div>
         </div>
       </div>
       <div class="form-group">
-        <label class="form-label">Thema <span class="req">*</span></label>
+        <label class="form-label"><span data-i18n="labelTopic">Thema</span> <span class="req">*</span></label>
         <div class="topic-tags" id="anfrageTopicTags"></div>
-        <div class="topic-error" id="afErrTopic">Bitte wählen Sie ein Thema</div>
+        <div class="topic-error" id="afErrTopic" data-i18n="errTopic">Bitte wählen Sie ein Thema</div>
         <input type="hidden" id="afTopic">
       </div>
       <div class="form-group" style="margin-top:8px">
-        <label class="form-label">Ihr konkretes Anliegen</label>
-        <textarea class="form-input" id="afNotes" placeholder="Was beschäftigt Sie aktuell? Was soll das Gespräch bringen?"></textarea>
+        <label class="form-label" data-i18n="labelNotes">Ihr konkretes Anliegen</label>
+        <textarea class="form-input" id="afNotes" placeholder="Was beschäftigt Sie aktuell? Was soll das Gespräch bringen?" data-i18n-placeholder="placeholderNotes"></textarea>
       </div>
 
-      <button class="btn-submit" id="afSubmitBtn" onclick="submitAnfrage()">Gespräch anfragen →</button>
-      <div class="submit-note">Keine Registrierung · <strong>Persönliche Antwort in 24h</strong> · Keine Verpflichtung</div>
+      <button class="btn-submit" id="afSubmitBtn" onclick="submitAnfrage()" data-i18n="submitBtn">Gespräch anfragen →</button>
+      <div class="submit-note" data-i18n="submitNote">Keine Registrierung · <strong>Persönliche Antwort in 24h</strong> · Keine Verpflichtung</div>
     </div>
 
     <!-- Anfrage Success -->
     <div class="anfrage-success" id="anfrageSuccess">
       <div class="success-icon">&#10003;</div>
-      <h3>Anfrage gesendet!</h3>
-      <p>Vielen Dank für Ihre Anfrage. Dr. Dirk Kötting meldet sich persönlich innerhalb von 24 Stunden mit einem passenden Terminvorschlag.</p>
+      <h3 data-i18n="successTitle">Anfrage gesendet!</h3>
+      <p data-i18n="successText">Vielen Dank für Ihre Anfrage. Dr. Dirk Kötting meldet sich persönlich innerhalb von 24 Stunden mit einem passenden Terminvorschlag.</p>
     </div>
   </div>
 
@@ -449,9 +459,9 @@ textarea.form-input { resize:vertical; min-height:90px; }
   <div class="kalender-panel" id="kalenderPanel">
     <button class="back-btn" onclick="goBack()">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
-      Zurück zur Auswahl
+      <span data-i18n="backBtn">Zurück zur Auswahl</span>
     </button>
-    <div class="kalender-intro">
+    <div class="kalender-intro" data-i18n="kalenderIntro">
       <strong>Für konkrete Themen</strong> können Sie direkt einen Termin wählen. Verfügbare Termine sind grün markiert.
     </div>
     <div class="booking-layout">
@@ -487,47 +497,47 @@ textarea.form-input { resize:vertical; min-height:90px; }
 <div class="overlay" id="bookingOverlay">
   <div class="modal-card">
     <div class="modal-header">
-      <h3>Termin bestätigen</h3>
+      <h3 data-i18n="modalTitle">Termin bestätigen</h3>
       <button class="close-btn" onclick="closeBookingForm()">&#10005;</button>
     </div>
     <div class="form-summary" id="formSummary"></div>
     <div class="form-body">
       <div class="modal-form-row">
         <div class="modal-form-group">
-          <label class="form-label">Name <span class="req">*</span></label>
-          <input class="form-input" type="text" id="fName" placeholder="Vor- und Nachname">
-          <div class="error-msg" id="errName">Bitte Namen eingeben</div>
+          <label class="form-label"><span data-i18n="labelName">Name</span> <span class="req">*</span></label>
+          <input class="form-input" type="text" id="fName" placeholder="Vor- und Nachname" data-i18n-placeholder="placeholderName">
+          <div class="error-msg" id="errName" data-i18n="errName2">Bitte Namen eingeben</div>
         </div>
         <div class="modal-form-group">
-          <label class="form-label">E-Mail <span class="req">*</span></label>
-          <input class="form-input" type="email" id="fEmail" placeholder="ihre@email.de">
-          <div class="error-msg" id="errEmail">Bitte gültige E-Mail eingeben</div>
+          <label class="form-label"><span data-i18n="labelEmail">E-Mail</span> <span class="req">*</span></label>
+          <input class="form-input" type="email" id="fEmail" placeholder="ihre@email.de" data-i18n-placeholder="placeholderEmail">
+          <div class="error-msg" id="errEmail" data-i18n="errEmail2">Bitte gültige E-Mail eingeben</div>
         </div>
       </div>
       <div class="modal-form-row">
         <div class="modal-form-group">
-          <label class="form-label">Telefon</label>
+          <label class="form-label" data-i18n="labelPhone">Telefon</label>
           <input class="form-input" type="tel" id="fPhone" placeholder="+49 …">
         </div>
         <div class="modal-form-group">
-          <label class="form-label">Unternehmen</label>
-          <input class="form-input" type="text" id="fCompany" placeholder="Ihre Firma">
+          <label class="form-label" data-i18n="labelCompany">Unternehmen</label>
+          <input class="form-input" type="text" id="fCompany" placeholder="Ihre Firma" data-i18n-placeholder="placeholderCompany">
         </div>
       </div>
       <div class="modal-form-group">
-        <label class="form-label">Thema <span class="req">*</span></label>
+        <label class="form-label"><span data-i18n="labelTopic">Thema</span> <span class="req">*</span></label>
         <div class="topic-tags" id="modalTopicTags"></div>
-        <div class="topic-error" id="errTopic">Bitte ein Thema wählen</div>
+        <div class="topic-error" id="errTopic" data-i18n="errTopic2">Bitte ein Thema wählen</div>
         <input type="hidden" id="fTopic">
       </div>
       <div class="modal-form-group">
-        <label class="form-label">Anmerkungen</label>
-        <textarea class="form-input" id="fNotes" rows="3" placeholder="Kurze Beschreibung Ihres Anliegens…"></textarea>
+        <label class="form-label" data-i18n="labelNotes2">Anmerkungen</label>
+        <textarea class="form-input" id="fNotes" rows="3" placeholder="Kurze Beschreibung Ihres Anliegens…" data-i18n-placeholder="placeholderNotes2"></textarea>
       </div>
     </div>
     <div class="form-actions">
-      <button class="btn-secondary" onclick="closeBookingForm()">Abbrechen</button>
-      <button class="btn-primary" id="submitBtn" onclick="submitBooking()">Termin bestätigen</button>
+      <button class="btn-secondary" onclick="closeBookingForm()" data-i18n="btnCancel">Abbrechen</button>
+      <button class="btn-primary" id="submitBtn" onclick="submitBooking()" data-i18n="btnConfirm">Termin bestätigen</button>
     </div>
   </div>
 </div>
@@ -536,10 +546,10 @@ textarea.form-input { resize:vertical; min-height:90px; }
 <div class="overlay" id="successOverlay">
   <div class="success-card">
     <div class="success-icon">&#10003;</div>
-    <h3>Termin gebucht!</h3>
+    <h3 data-i18n="successBookedTitle">Termin gebucht!</h3>
     <p id="successDetails"></p>
-    <button class="btn-secondary" onclick="downloadIcs()" style="margin-bottom:12px;width:100%;">Outlook-Termin (.ics) herunterladen</button>
-    <button class="btn-primary" onclick="closeSuccess()" style="width:100%;">Weiteren Termin buchen</button>
+    <button class="btn-secondary" onclick="downloadIcs()" style="margin-bottom:12px;width:100%;" data-i18n="downloadIcs">Outlook-Termin (.ics) herunterladen</button>
+    <button class="btn-primary" onclick="closeSuccess()" style="width:100%;" data-i18n="bookAnother">Weiteren Termin buchen</button>
   </div>
 </div>
 
@@ -556,6 +566,118 @@ textarea.form-input { resize:vertical; min-height:90px; }
 </div>
 
 <script>
+// ─── TRANSLATIONS ────────────────────────────────────────
+const UI_TEXT = {
+  de: {
+    sectionLabel:'Gesprächsformat wählen', pathDivider:'Wie möchten Sie einsteigen?',
+    pathAnfrageBadge:'Empfohlen', pathAnfrageTitle:'Gespräch anfragen',
+    pathAnfrageDesc:'Für komplexe Themen oder erste Einordnung. Sie erhalten eine persönliche Rückmeldung und einen passenden Terminvorschlag.',
+    pathAnfrageBtn:'Gespräch anfragen →',
+    pathKalenderBadge:'Direktbuchung', pathKalenderTitle:'Direkt Termin buchen',
+    pathKalenderDesc:'Für konkrete Anliegen mit klarer Fragestellung. Wählen Sie direkt einen freien Termin im Kalender.',
+    pathKalenderBtn:'Termin buchen →', backBtn:'Zurück zur Auswahl',
+    anfrageTitle:'Ihr Anliegen – wir melden uns persönlich',
+    anfrageSub:'Sie erhalten innerhalb von 24 Stunden eine persönliche Rückmeldung und einen passenden Terminvorschlag.<br><strong>Keine Registrierung · Keine Verpflichtung</strong>',
+    labelName:'Name', labelCompany:'Unternehmen', labelPosition:'Position',
+    labelEmail:'E-Mail', labelPhone:'Telefon', labelTimePref:'Zeitpräferenz',
+    chipWeek:'Diese Woche', chipNextWeek:'Nächste Woche', chip23Weeks:'2–3 Wochen', chipFlex:'Flexibel',
+    labelTopic:'Thema', labelNotes:'Ihr konkretes Anliegen', labelNotes2:'Anmerkungen',
+    placeholderName:'Vor- und Nachname', placeholderCompany:'Ihre Organisation',
+    placeholderPosition:'z.B. CIO, CDO, Vorstand IT', placeholderEmail:'ihre@email.de',
+    placeholderNotes:'Was beschäftigt Sie aktuell? Was soll das Gespräch bringen?',
+    placeholderNotes2:'Kurze Beschreibung Ihres Anliegens…',
+    submitBtn:'Gespräch anfragen →',
+    submitNote:'Keine Registrierung · <strong>Persönliche Antwort in 24h</strong> · Keine Verpflichtung',
+    successTitle:'Anfrage gesendet!',
+    successText:'Vielen Dank für Ihre Anfrage. Dr. Dirk Kötting meldet sich persönlich innerhalb von 24 Stunden mit einem passenden Terminvorschlag.',
+    kalenderIntro:'<strong>Für konkrete Themen</strong> können Sie direkt einen Termin wählen. Verfügbare Termine sind grün markiert.',
+    timeslotsTitle:'Zeitfenster wählen', timeslotsSub:'Bitte zuerst einen Tag wählen',
+    noSlots:'Wählen Sie einen Tag im Kalender', modalTitle:'Termin bestätigen',
+    errName:'Bitte geben Sie Ihren Namen ein', errEmail:'Bitte gültige E-Mail eingeben',
+    errTopic:'Bitte wählen Sie ein Thema', errName2:'Bitte Namen eingeben',
+    errEmail2:'Bitte gültige E-Mail eingeben', errTopic2:'Bitte ein Thema wählen',
+    btnCancel:'Abbrechen', btnConfirm:'Termin bestätigen',
+    successBookedTitle:'Termin gebucht!', downloadIcs:'Outlook-Termin (.ics) herunterladen',
+    bookAnother:'Weiteren Termin buchen', minutesSuffix:'Minuten',
+    gptTitle:'GPT Vault<br>Beratung & Support',
+    gptSub:'Geführte Session oder Support zu Ihrer GPT Vault Installation – wählen Sie den passenden Weg.',
+    heroTitle:'Wählen Sie den<br>passenden Einstieg',
+    heroSub:'Nicht jedes Thema braucht sofort einen Termin. Wählen Sie, was für Sie gerade passt.',
+    dateLocale:'de-DE',
+  },
+  en: {
+    sectionLabel:'Choose Meeting Format', pathDivider:'How would you like to start?',
+    pathAnfrageBadge:'Recommended', pathAnfrageTitle:'Request a Meeting',
+    pathAnfrageDesc:'For complex topics or initial orientation. You will receive a personal response and a suitable appointment proposal.',
+    pathAnfrageBtn:'Request Meeting →',
+    pathKalenderBadge:'Direct Booking', pathKalenderTitle:'Book Directly',
+    pathKalenderDesc:'For specific concerns with a clear question. Choose an available slot directly in the calendar.',
+    pathKalenderBtn:'Book Appointment →', backBtn:'Back to Selection',
+    anfrageTitle:'Your Request – we respond personally',
+    anfrageSub:'You will receive a personal response within 24 hours with a suitable appointment proposal.<br><strong>No registration · No obligation</strong>',
+    labelName:'Name', labelCompany:'Company', labelPosition:'Position',
+    labelEmail:'Email', labelPhone:'Phone', labelTimePref:'Time Preference',
+    chipWeek:'This week', chipNextWeek:'Next week', chip23Weeks:'2–3 weeks', chipFlex:'Flexible',
+    labelTopic:'Topic', labelNotes:'Your specific request', labelNotes2:'Notes',
+    placeholderName:'First and last name', placeholderCompany:'Your organization',
+    placeholderPosition:'e.g. CIO, CDO, VP IT', placeholderEmail:'your@email.com',
+    placeholderNotes:'What is on your mind? What should the meeting achieve?',
+    placeholderNotes2:'Brief description of your concern…',
+    submitBtn:'Request Meeting →',
+    submitNote:'No registration · <strong>Personal reply within 24h</strong> · No obligation',
+    successTitle:'Request sent!',
+    successText:'Thank you for your request. Dr. Dirk Kötting will personally respond within 24 hours with a suitable appointment proposal.',
+    kalenderIntro:'<strong>For specific topics</strong> you can directly choose an appointment. Available slots are marked in green.',
+    timeslotsTitle:'Select Time Slot', timeslotsSub:'Please select a day first',
+    noSlots:'Select a day in the calendar', modalTitle:'Confirm Appointment',
+    errName:'Please enter your name', errEmail:'Please enter a valid email',
+    errTopic:'Please select a topic', errName2:'Please enter your name',
+    errEmail2:'Please enter a valid email', errTopic2:'Please select a topic',
+    btnCancel:'Cancel', btnConfirm:'Confirm Appointment',
+    successBookedTitle:'Appointment booked!', downloadIcs:'Download Calendar (.ics)',
+    bookAnother:'Book Another Appointment', minutesSuffix:'minutes',
+    gptTitle:'GPT Vault<br>Consultation & Support',
+    gptSub:'Guided session or support for your GPT Vault installation – choose the right path.',
+    heroTitle:'Choose Your<br>Entry Point',
+    heroSub:'Not every topic needs an immediate appointment. Choose what works best for you right now.',
+    dateLocale:'en-GB',
+  }
+};
+
+let currentLang = 'de';
+
+function setLang(l) {
+  currentLang = l;
+  document.getElementById('btnDE').classList.toggle('active', l==='de');
+  document.getElementById('btnEN').classList.toggle('active', l==='en');
+  const t = UI_TEXT[l];
+  // Update all data-i18n elements
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    if(t[key] !== undefined) el.innerHTML = t[key];
+  });
+  // Update placeholders
+  document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+    const key = el.getAttribute('data-i18n-placeholder');
+    if(t[key] !== undefined) el.placeholder = t[key];
+  });
+  // Re-render dynamic parts
+  renderMeetingTypes();
+  if(!state.selectedDate) {
+    document.getElementById('timeslotsHeader').innerHTML = `<h3>${t.timeslotsTitle}</h3><p>${t.timeslotsSub}</p>`;
+    document.getElementById('timeslotsList').innerHTML = `<div class="no-slots">${t.noSlots}</div>`;
+  }
+  // Update hero for active mode
+  if(currentMode === 'gpt-vault') {
+    document.getElementById('heroTitle').innerHTML = t.gptTitle;
+    document.getElementById('heroSub').textContent = t.gptSub;
+  } else {
+    document.getElementById('heroTitle').innerHTML = t.heroTitle;
+    document.getElementById('heroSub').textContent = t.heroSub;
+  }
+  renderCalendar();
+}
+
 // ─── CONFIG ─────────────────────────────────────────────
 const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz-v5-OWq3T1Pl_RGH-jPLuhj3rAjSam8bD_z-z_5ynS7OqQApvd0mcHMQlUPInK3YX/exec';
 const MONTH_NAMES = ['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'];
@@ -564,36 +686,36 @@ const FIXED_SLOTS = ['16:00','16:30','17:00'];
 
 const MODES = {
   default: {
-    tag:'KI Governance · Entscheidungssicherheit',
-    subtitle:'IT Governance · AI Policy · KI-Entscheidungssicherheit',
+    tag:'KI Governance · Entscheidungssicherheit', tag_en:'AI Governance · Decision Confidence',
+    subtitle:'IT Governance · AI Policy · KI-Entscheidungssicherheit', subtitle_en:'IT Governance · AI Policy · AI Decision Security',
     meetingTypes:[
-      {id:'governance',name:'AI Governance Briefing',    duration:30, desc:'Regulatorische Orientierung & Status-Check'},
-      {id:'strategie', name:'KI-Strategiegespräch',      duration:45, desc:'Entscheidungsanalyse mit Handlungsempfehlungen'},
-      {id:'policy',    name:'Policy & Compliance Review', duration:60, desc:'EU AI Act & Governance-Standards Tiefenprüfung'}
+      {id:'governance', name:'AI Governance Briefing',     name_en:'AI Governance Briefing',    duration:30, desc:'Regulatorische Orientierung & Status-Check',           desc_en:'Regulatory orientation & status check'},
+      {id:'strategie',  name:'KI-Strategiegespräch',       name_en:'AI Strategy Meeting',        duration:45, desc:'Entscheidungsanalyse mit Handlungsempfehlungen',         desc_en:'Decision analysis with action recommendations'},
+      {id:'policy',     name:'Policy & Compliance Review', name_en:'Policy & Compliance Review', duration:60, desc:'EU AI Act & Governance-Standards Tiefenprüfung',         desc_en:'EU AI Act & Governance standards deep review'}
     ],
     topics:[
-      {value:'AI Governance Beratung',          label:'AI Governance'},
-      {value:'EU AI Act Compliance',            label:'EU AI Act'},
-      {value:'K² Kausale Kompetenz Gespräch',   label:'K² Kausal-Kompetenz'},
-      {value:'IT Governance / ISMS',            label:'IT Governance / ISMS'},
-      {value:'Interim Management',              label:'Interim Management'},
-      {value:'Sourcing / Transitions',          label:'Sourcing / Transitions'},
-      {value:'Keynote',                         label:'Keynote'},
-      {value:'Sparring',                        label:'Sparring'},
-      {value:'Sonstiges',                       label:'Sonstiges'}
+      {value:'AI Governance Beratung',         label:'AI Governance',          label_en:'AI Governance'},
+      {value:'EU AI Act Compliance',           label:'EU AI Act',               label_en:'EU AI Act'},
+      {value:'K² Kausale Kompetenz Gespräch',  label:'K² Kausal-Kompetenz',    label_en:'K² Causal Competence'},
+      {value:'IT Governance / ISMS',           label:'IT Governance / ISMS',   label_en:'IT Governance / ISMS'},
+      {value:'Interim Management',             label:'Interim Management',     label_en:'Interim Management'},
+      {value:'Sourcing / Transitions',         label:'Sourcing / Transitions', label_en:'Sourcing / Transitions'},
+      {value:'Keynote',                        label:'Keynote',                label_en:'Keynote'},
+      {value:'Sparring',                       label:'Sparring',               label_en:'Sparring'},
+      {value:'Sonstiges',                      label:'Sonstiges',              label_en:'Other'}
     ]
   },
   'gpt-vault': {
-    tag:'GPT Vault · Support',
-    subtitle:'GPT Vault · ChatGPT Backup & Migration',
+    tag:'GPT Vault · Support', tag_en:'GPT Vault · Support',
+    subtitle:'GPT Vault · ChatGPT Backup & Migration', subtitle_en:'GPT Vault · ChatGPT Backup & Migration',
     meetingTypes:[
-      {id:'session',name:'GPT Vault – Geführte Session',duration:60,desc:'TeamViewer-Session zur GPT-Sicherung'},
-      {id:'support',name:'GPT Vault – Support',         duration:30,desc:'Technischer Support & Troubleshooting'}
+      {id:'session', name:'GPT Vault – Geführte Session', name_en:'GPT Vault – Guided Session', duration:60, desc:'TeamViewer-Session zur GPT-Sicherung',     desc_en:'TeamViewer session for GPT backup'},
+      {id:'support', name:'GPT Vault – Support',          name_en:'GPT Vault – Support',         duration:30, desc:'Technischer Support & Troubleshooting',    desc_en:'Technical support & troubleshooting'}
     ],
     topics:[
-      {value:'GPT Vault Session',label:'Geführte Session (TeamViewer)'},
-      {value:'GPT Vault Support',label:'Technischer Support'},
-      {value:'Sonstiges',        label:'Sonstiges'}
+      {value:'GPT Vault Session', label:'Geführte Session (TeamViewer)', label_en:'Guided Session (TeamViewer)'},
+      {value:'GPT Vault Support', label:'Technischer Support',           label_en:'Technical Support'},
+      {value:'Sonstiges',         label:'Sonstiges',                      label_en:'Other'}
     ]
   }
 };
@@ -639,6 +761,7 @@ function init() {
   renderCalendar();
   renderTimeslots();
   loadBookedSlots();
+  setLang('de');
 }
 
 // ─── PATH SELECTION ──────────────────────────────────────
@@ -667,10 +790,13 @@ function goBack() {
 // ─── MEETING TYPES ───────────────────────────────────────
 function renderMeetingTypes() {
   const c = document.getElementById('meetingTypes'); c.innerHTML = '';
+  const t = UI_TEXT[currentLang];
   getMT().forEach(mt => {
     const card = document.createElement('div');
     card.className = 'meeting-type-card'+(state.selectedMeetingType===mt.id?' active':'');
-    card.innerHTML = `<span class="mt-check">✓</span><div class="mt-duration">${mt.duration} Minuten</div><div class="mt-name">${mt.name}</div><div class="mt-desc">${mt.desc}</div>`;
+    const name = currentLang==='en' ? (mt.name_en||mt.name) : mt.name;
+    const desc = currentLang==='en' ? (mt.desc_en||mt.desc) : mt.desc;
+    card.innerHTML = `<span class="mt-check">✓</span><div class="mt-duration">${mt.duration} ${t.minutesSuffix}</div><div class="mt-name">${name}</div><div class="mt-desc">${desc}</div>`;
     card.addEventListener('click', ()=>{ state.selectedMeetingType=mt.id; renderMeetingTypes(); renderCalendar(); if(state.selectedDate) renderTimeslots(); });
     c.appendChild(card);
   });
@@ -682,7 +808,7 @@ function renderAnfrageTopicTags() {
   getTopics().forEach(t => {
     const tag = document.createElement('div');
     tag.className = 'topic-tag'+(selectedAnfrageTopic===t.value?' active':'');
-    tag.textContent = t.label;
+    tag.textContent = currentLang==='en' ? (t.label_en||t.label) : t.label;
     tag.addEventListener('click', ()=>{
       selectedAnfrageTopic=t.value;
       document.getElementById('afTopic').value=t.value;
@@ -699,7 +825,7 @@ function renderModalTopicTags() {
   getTopics().forEach(t => {
     const tag = document.createElement('div');
     tag.className = 'topic-tag'+(selectedModalTopic===t.value?' active':'');
-    tag.textContent = t.label;
+    tag.textContent = currentLang==='en' ? (t.label_en||t.label) : t.label;
     tag.addEventListener('click', ()=>{
       selectedModalTopic=t.value;
       document.getElementById('fTopic').value=t.value;
@@ -838,8 +964,9 @@ function renderCalendar(){
 
 function renderTimeslots(){
   const h=document.getElementById('timeslotsHeader'),l=document.getElementById('timeslotsList');
-  if(!state.selectedDate){h.innerHTML='<h3>Zeitfenster wählen</h3><p>Bitte zuerst einen Tag wählen</p>';l.innerHTML='<div class="no-slots">Wählen Sie einen Tag im Kalender</div>';return;}
-  const ds=state.selectedDate.toLocaleDateString('de-DE',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+  const tx=UI_TEXT[currentLang];
+  if(!state.selectedDate){h.innerHTML=`<h3>${tx.timeslotsTitle}</h3><p>${tx.timeslotsSub}</p>`;l.innerHTML=`<div class="no-slots">${tx.noSlots}</div>`;return;}
+  const ds=state.selectedDate.toLocaleDateString(tx.dateLocale,{weekday:'long',day:'numeric',month:'long',year:'numeric'});
   h.innerHTML=`<h3>${ds}</h3><p>Verfügbare Zeitfenster</p>`;
   const slots=getSlotStates(state.selectedDate);
   if(!slots.length){l.innerHTML='<div class="no-slots">Keine Zeitfenster verfügbar</div>';return;}

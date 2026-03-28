@@ -1,0 +1,192 @@
+// ====================== KONFIGURATION ======================
+const SHEET_NAME    = 'Terminbuchung';
+const RESEND_API_KEY = 're_g4crPYd9_BcyoobZMaxCt1dXejioQnTqJ'; // <-- Ihren Resend API-Key eintragen
+const NOTIFY_EMAIL  = 'dr-dirk@dr-dirkinstitute.org';
+const FROM_EMAIL    = 'info@edvkonzepte.de';
+
+
+// ====================== HILFSFUNKTIONEN ======================
+
+function getSheet_() {
+  const ss = SpreadsheetApp.getActive();
+  const sheet = ss.getSheetByName(SHEET_NAME);
+  if (!sheet) {
+    throw new Error('Tabellenblatt "' + SHEET_NAME + '" wurde nicht gefunden.');
+  }
+  return sheet;
+}
+
+function sendResendMail_(to, subject, textBody) {
+  const url = 'https://api.resend.com/emails';
+
+  const payload = {
+    from: FROM_EMAIL,
+    to: to,
+    subject: subject,
+    text: textBody
+  };
+
+  const options = {
+    method: 'post',
+    contentType: 'application/json',
+    headers: { Authorization: 'Bearer ' + RESEND_API_KEY },
+    payload: JSON.stringify(payload),
+    muteHttpExceptions: true
+  };
+
+  const res = UrlFetchApp.fetch(url, options);
+  Logger.log('Resend status: ' + res.getResponseCode());
+  Logger.log('Resend response: ' + res.getContentText());
+}
+
+// ====================== API: BUCHUNG ANNEHMEN ======================
+
+function doPost(e) {
+  try {
+    if (!e || !e.postData || !e.postData.contents) {
+      throw new Error('Keine POST-Daten empfangen.');
+    }
+
+    const data = JSON.parse(e.postData.contents);
+
+    // Erwartete Felder: date, time, endtime, meetingtype, name, email, phone, company, topic, notes
+    const sheet = getSheet_();
+
+    // Optionale: automatisch Kopfzeile anlegen, falls Sheet leer ist
+    if (sheet.getLastRow() === 0) {
+      sheet.appendRow([
+        'Erstellt',
+        'Datum',
+        'Start',
+        'Ende',
+        'Terminart',
+        'Name',
+        'E-Mail',
+        'Telefon',
+        'Firma',
+        'Thema',
+        'Anmerkungen'
+      ]);
+    }
+
+    sheet.appendRow([
+      new Date(),                     // Erstellzeitpunkt
+      data.date || '',                // 2026-03-25
+      data.time || '',                // 16:00
+      data.endtime || '',             // 16:30
+      data.meetingtype || '',         // z.B. "Beratungstermin"
+      data.name || '',
+      data.email || '',
+      data.phone || '',
+      data.company || '',
+      data.topic || '',
+      data.notes || ''
+    ]);
+
+    // -------- Benachrichtigung an dich --------
+    let notifyText =
+      'Neue Terminbuchung\n\n' +
+      'Datum: ' + (data.date || '') + '\n' +
+      'Zeit: ' + (data.time || '') + ' – ' + (data.endtime || '') + '\n' +
+      'Terminart: ' + (data.meetingtype || '') + '\n\n' +
+      'Name: ' + (data.name || '') + '\n' +
+      'E-Mail: ' + (data.email || '') + '\n' +
+      'Telefon: ' + (data.phone || '') + '\n' +
+      'Firma: ' + (data.company || '') + '\n' +
+      'Thema: ' + (data.topic || '') + '\n\n' +
+      'Anmerkungen:\n' + (data.notes || '');
+
+    sendResendMail_(NOTIFY_EMAIL, 'Neue Terminbuchung', notifyText);
+
+    // -------- Bestätigung an Kund:in --------
+    if (data.email) {
+      let confirmText =
+        'Guten Tag ' + (data.name || '') + ',\n\n' +
+        'vielen Dank für Ihre Terminbuchung.\n\n' +
+        'Datum: ' + (data.date || '') + '\n' +
+        'Zeit: ' + (data.time || '') + ' – ' + (data.endtime || '') + '\n' +
+        'Terminart: ' + (data.meetingtype || '') + '\n' +
+        'Thema: ' + (data.topic || '') + '\n\n' +
+        'Falls Sie den Termin verschieben oder absagen möchten, antworten Sie einfach auf diese E-Mail.\n\n' +
+        'Herzliche Grüße\n' +
+        'Dr. Dirk Kötting';
+
+      sendResendMail_(data.email, 'Ihre Terminbestätigung', confirmText);
+    }
+
+    const out = {
+      success: true
+    };
+
+    return ContentService
+      .createTextOutput(JSON.stringify(out))
+      .setMimeType(ContentService.MimeType.JSON);
+
+  } catch (err) {
+    Logger.log('Fehler in doPost: ' + err);
+
+    const out = {
+      success: false,
+      error: String(err)
+    };
+
+    return ContentService
+      .createTextOutput(JSON.stringify(out))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+}
+
+// ====================== API: GEBUCHTE SLOTS LADEN ======================
+// Wird von index-3.html per GET aufgerufen, um belegte Slots zu markieren.
+
+function doGet() {
+  try {
+    const sheet = getSheet_();
+    const lastRow = sheet.getLastRow();
+
+    if (lastRow < 2) {
+      // keine Daten
+      const empty = { booked: [] };
+      return ContentService
+        .createTextOutput(JSON.stringify(empty))
+        .setMimeType(ContentService.MimeType.JSON);
+    }
+
+    const range = sheet.getRange(2, 1, lastRow - 1, 11); // ab Zeile 2, 11 Spalten
+    const values = range.getValues();
+
+    const booked = values.map(function(row) {
+      return {
+        created: row[0],
+        date: row[1],
+        time: row[2],
+        endtime: row[3],
+        meetingtype: row[4],
+        name: row[5],
+        email: row[6],
+        phone: row[7],
+        company: row[8],
+        topic: row[9],
+        notes: row[10]
+      };
+    });
+
+    const out = { booked: booked };
+
+    return ContentService
+      .createTextOutput(JSON.stringify(out))
+      .setMimeType(ContentService.MimeType.JSON);
+
+  } catch (err) {
+    Logger.log('Fehler in doGet: ' + err);
+
+    const out = {
+      booked: [],
+      error: String(err)
+    };
+
+    return ContentService
+      .createTextOutput(JSON.stringify(out))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+}
