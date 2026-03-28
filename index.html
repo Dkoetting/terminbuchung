@@ -139,6 +139,14 @@ header {
 .path-btn.btn-outline:hover { background:rgba(37,99,235,0.06); }
 
 /* ─── ANFRAGE PANEL ─── */
+.back-btn {
+  display:inline-flex; align-items:center; gap:6px;
+  font-size:13px; font-weight:600; color:var(--muted);
+  background:none; border:none; cursor:pointer; padding:0 0 20px 0;
+  transition:color 0.15s;
+}
+.back-btn:hover { color:var(--primary); }
+.back-btn svg { width:16px; height:16px; }
 .anfrage-panel { display:none; }
 .anfrage-panel.visible { display:block; }
 .anfrage-card {
@@ -352,7 +360,7 @@ textarea.form-input { resize:vertical; min-height:90px; }
   </div>
 
   <!-- Path selector -->
-  <div class="path-selector">
+  <div class="path-selector" id="pathSelector">
     <div class="path-card primary-path" id="pathAnfrage" onclick="selectPath('anfrage')">
       <span class="path-badge recommended">Empfohlen</span>
       <span class="path-icon">&#9993;</span>
@@ -371,6 +379,10 @@ textarea.form-input { resize:vertical; min-height:90px; }
 
   <!-- Anfrage Panel -->
   <div class="anfrage-panel" id="anfragePanel">
+    <button class="back-btn" onclick="goBack()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+      Zurück zur Auswahl
+    </button>
     <div class="anfrage-card" id="anfrageForm">
       <div class="anfrage-title">Ihr Anliegen – wir melden uns persönlich</div>
       <div class="anfrage-sub">Sie erhalten innerhalb von 24 Stunden eine persönliche Rückmeldung und einen passenden Terminvorschlag.<br><strong>Keine Registrierung · Keine Verpflichtung</strong></div>
@@ -437,6 +449,10 @@ textarea.form-input { resize:vertical; min-height:90px; }
 
   <!-- Kalender Panel -->
   <div class="kalender-panel" id="kalenderPanel">
+    <button class="back-btn" onclick="goBack()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+      Zurück zur Auswahl
+    </button>
     <div class="kalender-intro">
       <strong>Für konkrete Themen</strong> können Sie direkt einen Termin wählen. Verfügbare Termine sind grün markiert.
     </div>
@@ -640,6 +656,14 @@ function selectPath(path) {
   } else {
     document.getElementById('kalenderPanel').scrollIntoView({behavior:'smooth', block:'start'});
   }
+}
+
+function goBack() {
+  document.getElementById('anfragePanel').classList.remove('visible');
+  document.getElementById('kalenderPanel').classList.remove('visible');
+  document.getElementById('pathAnfrage').classList.remove('active-path');
+  document.getElementById('pathKalender').classList.remove('active-path');
+  document.getElementById('pathSelector').scrollIntoView({behavior:'smooth', block:'start'});
 }
 
 // ─── MEETING TYPES ───────────────────────────────────────
