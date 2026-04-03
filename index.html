@@ -682,7 +682,22 @@ function setLang(l) {
 const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz-v5-OWq3T1Pl_RGH-jPLuhj3rAjSam8bD_z-z_5ynS7OqQApvd0mcHMQlUPInK3YX/exec';
 const MONTH_NAMES = ['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'];
 const SLOT_DURATION_MIN = 30;
-const FIXED_SLOTS = ['16:00','16:30','17:00'];
+// Alle möglichen 30-Min-Slots werden dynamisch aus den Tagesblöcken berechnet
+function generateSlotsFromBlocks(blocks) {
+  const slots = [];
+  if (!blocks || !blocks.length) return slots;
+  blocks.forEach(b => {
+    let startMin = parseTimeToMinutes(b.start);
+    const endMin = parseTimeToMinutes(b.end);
+    while (startMin + SLOT_DURATION_MIN <= endMin) {
+      const h = String(Math.floor(startMin/60)).padStart(2,'0');
+      const m = String(startMin%60).padStart(2,'0');
+      slots.push(`${h}:${m}`);
+      startMin += SLOT_DURATION_MIN;
+    }
+  });
+  return slots;
+}
 
 const MODES = {
   default: {
@@ -730,10 +745,13 @@ let state = {
   selectedDate:null, selectedSlot:null, selectedMeetingType:null,
   bookedSlots:[], bookedSlotKeys:new Set(), lastBooking:null,
   availability:{
-    0:{enabled:true, start:'16:00',end:'17:30'}, 1:{enabled:true, start:'16:00',end:'17:30'},
-    2:{enabled:true, start:'16:00',end:'17:30'}, 3:{enabled:true, start:'16:00',end:'17:30'},
-    4:{enabled:true, start:'16:00',end:'17:30'}, 5:{enabled:false,start:'16:00',end:'17:30'},
-    6:{enabled:false,start:'16:00',end:'17:30'}
+    0:{enabled:true,  blocks:[{start:'08:00',end:'09:00'},{start:'12:00',end:'13:00'},{start:'16:30',end:'17:30'}]}, // Mo
+    1:{enabled:true,  blocks:[{start:'08:00',end:'09:30'},{start:'12:00',end:'13:00'},{start:'16:30',end:'17:30'}]}, // Di
+    2:{enabled:true,  blocks:[{start:'07:30',end:'09:00'},{start:'12:00',end:'13:00'},{start:'16:30',end:'17:00'}]}, // Mi
+    3:{enabled:true,  blocks:[{start:'08:00',end:'09:00'},{start:'16:30',end:'17:30'}]},                             // Do
+    4:{enabled:true,  blocks:[{start:'08:00',end:'09:00'},{start:'12:00',end:'13:00'}]},                             // Fr
+    5:{enabled:true,  blocks:[], anfrage:true},                                                                       // Sa (auf Anfrage)
+    6:{enabled:false, blocks:[]}                                                                                      // So
   }
 };
 
@@ -917,17 +935,18 @@ function dayAvailabilityKey(d){const dow=d.getDay();return dow===0?6:dow-1;}
 function fmtDate(d){return`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;}
 function getSlotStates(date){
   const ak=dayAvailabilityKey(date),av=state.availability[ak];
-  if(!av||!av.enabled)return[];
+  if(!av||!av.enabled||av.anfrage)return[];
+  const slots=generateSlotsFromBlocks(av.blocks||[]);
+  if(!slots.length)return[];
   const now=new Date(),isToday=date.toDateString()===now.toDateString(),dayId=fmtDate(date);
-  return FIXED_SLOTS.map(slot=>{
-    const startMin=parseTimeToMinutes(slot),endMin=startMin+SLOT_DURATION_MIN;
-    if(startMin<parseTimeToMinutes(av.start)||endMin>parseTimeToMinutes(av.end))return{time:slot,available:false,reason:'außerhalb'};
+  return slots.map(slot=>{
     if(isSlotBooked(dayId,slot))return{time:slot,available:false,reason:'belegt'};
     if(isToday){const st=new Date(date);const[h,m]=slot.split(':').map(Number);st.setHours(h,m,0,0);if(st<=now)return{time:slot,available:false,reason:'vergangen'};}
     return{time:slot,available:true,reason:''};
   });
 }
-function hasAvailableSlots(date){return getSlotStates(date).some(s=>s.available);}
+function isAnfrageDay(date){const ak=dayAvailabilityKey(date),av=state.availability[ak];return av&&av.enabled&&av.anfrage===true;}
+function hasAvailableSlots(date){return isAnfrageDay(date)||getSlotStates(date).some(s=>s.available);}
 function setSync(status,label){
   const dot=document.getElementById('syncDot'),lbl=document.getElementById('syncLabel');
   dot.className='avail-dot'+(status==='loading'?' loading':status==='error'?' error':'');
@@ -968,6 +987,22 @@ function renderTimeslots(){
   if(!state.selectedDate){h.innerHTML=`<h3>${tx.timeslotsTitle}</h3><p>${tx.timeslotsSub}</p>`;l.innerHTML=`<div class="no-slots">${tx.noSlots}</div>`;return;}
   const ds=state.selectedDate.toLocaleDateString(tx.dateLocale,{weekday:'long',day:'numeric',month:'long',year:'numeric'});
   h.innerHTML=`<h3>${ds}</h3><p>Verfügbare Zeitfenster</p>`;
+  // Samstag / "Auf Anfrage"-Tage
+  if(isAnfrageDay(state.selectedDate)){
+    l.innerHTML='';
+    const info=document.createElement('div');
+    info.className='no-slots';
+    info.style.cssText='text-align:center;padding:24px 16px;';
+    info.innerHTML=`<p style="font-size:15px;font-weight:600;color:var(--primary);margin-bottom:8px;">Samstag – Termine auf Anfrage</p><p style="font-size:13px;color:var(--text-light);margin-bottom:16px;">Für Samstagstermine senden Sie mir bitte eine kurze Anfrage mit Ihrem Wunschtermin.</p>`;
+    const btn=document.createElement('a');
+    btn.href='mailto:dr-dirk@dr-dirkinstitute.org?subject=Terminanfrage%20Samstag%20'+encodeURIComponent(ds)+'&body='+encodeURIComponent('Guten Tag Dr. Kötting,\n\nich würde gerne einen Termin am '+ds+' vereinbaren.\n\nMein Wunschzeitfenster: \nThema: \n\nMit freundlichen Grüßen\n');
+    btn.className='timeslot-btn';
+    btn.style.cssText='display:block;text-align:center;text-decoration:none;background:var(--primary);color:#fff;font-weight:700;padding:14px 24px;border-radius:10px;font-size:14px;';
+    btn.textContent='✉ Terminanfrage per E-Mail senden';
+    l.appendChild(info);
+    l.appendChild(btn);
+    return;
+  }
   const slots=getSlotStates(state.selectedDate);
   if(!slots.length){l.innerHTML='<div class="no-slots">Keine Zeitfenster verfügbar</div>';return;}
   l.innerHTML='';
@@ -1041,8 +1076,39 @@ function changeMonth(delta){
 
 // ─── ADMIN ───────────────────────────────────────────────
 function toggleAdmin(){const o=document.getElementById('adminOverlay');o.classList.toggle('visible');if(o.classList.contains('visible')){renderAvailabilityGrid();renderAdminBookings();}}
-function renderAvailabilityGrid(){const g=document.getElementById('availabilityGrid');g.innerHTML='';['Montag','Dienstag','Mittwoch','Donnerstag','Freitag','Samstag','Sonntag'].forEach((day,i)=>{const av=state.availability[i],row=document.createElement('div');row.className='availability-row';row.innerHTML=`<input type="checkbox" id="avD${i}" ${av.enabled?'checked':''}><label for="avD${i}">${day}</label><input type="time" id="avS${i}" value="${av.start}"><span style="color:var(--muted)">–</span><input type="time" id="avE${i}" value="${av.end}">`;g.appendChild(row);});}
-function saveAvailability(){for(let i=0;i<7;i++)state.availability[i]={enabled:document.getElementById(`avD${i}`).checked,start:document.getElementById(`avS${i}`).value,end:document.getElementById(`avE${i}`).value};renderCalendar();if(state.selectedDate)renderTimeslots();toggleAdmin();}
+function renderAvailabilityGrid(){
+  const g=document.getElementById('availabilityGrid');g.innerHTML='';
+  ['Montag','Dienstag','Mittwoch','Donnerstag','Freitag','Samstag','Sonntag'].forEach((day,i)=>{
+    const av=state.availability[i];
+    const wrapper=document.createElement('div');wrapper.style.cssText='margin-bottom:12px;padding:10px;border:1px solid var(--border);border-radius:8px;';
+    const header=document.createElement('div');header.className='availability-row';
+    const isAnfrage=av.anfrage===true;
+    header.innerHTML=`<input type="checkbox" id="avD${i}" ${av.enabled?'checked':''}><label for="avD${i}" style="font-weight:600">${day}</label>${isAnfrage?'<span style="font-size:11px;color:var(--primary);font-weight:600;margin-left:8px;">⬥ Auf Anfrage</span>':''}`;
+    wrapper.appendChild(header);
+    if(!isAnfrage&&av.blocks){
+      av.blocks.forEach((b,bi)=>{
+        const row=document.createElement('div');row.className='availability-row';row.style.marginLeft='28px';
+        row.innerHTML=`<span style="font-size:11px;color:var(--muted);width:50px;">Block ${bi+1}</span><input type="time" id="avS${i}_${bi}" value="${b.start}"><span style="color:var(--muted)">–</span><input type="time" id="avE${i}_${bi}" value="${b.end}">`;
+        wrapper.appendChild(row);
+      });
+    }
+    g.appendChild(wrapper);
+  });
+}
+function saveAvailability(){
+  for(let i=0;i<7;i++){
+    const enabled=document.getElementById(`avD${i}`).checked;
+    const av=state.availability[i];
+    if(av.anfrage){state.availability[i]={enabled,blocks:[],anfrage:true};continue;}
+    const blocks=[];
+    if(av.blocks){av.blocks.forEach((b,bi)=>{
+      const s=document.getElementById(`avS${i}_${bi}`),e=document.getElementById(`avE${i}_${bi}`);
+      if(s&&e)blocks.push({start:s.value,end:e.value});
+    });}
+    state.availability[i]={enabled,blocks};
+  }
+  renderCalendar();if(state.selectedDate)renderTimeslots();toggleAdmin();
+}
 function renderAdminBookings(){const l=document.getElementById('bookingsList');if(!state.bookedSlots.length){l.innerHTML='<div class="no-bookings">Keine Buchungen</div>';return;}l.innerHTML='';[...state.bookedSlots].sort((a,b)=>(a.date+a.time).localeCompare(b.date+b.time)).forEach(b=>{const item=document.createElement('div');item.className='booking-item';const d=new Date(b.date+'T00:00:00'),ds=d.toLocaleDateString('de-DE',{weekday:'short',day:'numeric',month:'short',year:'numeric'});item.innerHTML=`<strong>${ds}, ${b.time} Uhr</strong><span>gesperrt</span>`;l.appendChild(item);});}
 
 // ─── BOOT ────────────────────────────────────────────────
