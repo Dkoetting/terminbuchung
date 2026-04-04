@@ -50,7 +50,7 @@ header {
   display:flex; align-items:center;
 }
 .logo-left  { height:42px; max-width:160px; object-fit:contain; display:block; }
-.logo-right { height:48px; width:48px; object-fit:contain; display:block; mix-blend-mode:screen; filter:brightness(3) contrast(0.9); }
+.logo-right { height:44px; width:44px; object-fit:cover; display:block; border-radius:50%; border:2px solid rgba(255,255,255,0.3); }
 
 /* ─── WRAPPER ─── */
 .app-wrapper { position:relative; z-index:1; max-width:940px; margin:0 auto; padding:44px 20px 80px; }
@@ -334,14 +334,14 @@ textarea.form-input { resize:vertical; min-height:90px; }
     <button class="lang-btn active" id="btnDE" onclick="setLang('de')">DE</button>
     <button class="lang-btn" id="btnEN" onclick="setLang('en')">EN</button>
   </div>
-  <div class="logo-box"><img src="assets/logo-dirk.jpg" class="logo-right" alt="Dr. DirKInstitute"></div>
+  <div class="logo-box"><img src="assets/dirk-portrait.jpg" class="logo-right" alt="Dr. Dirk Kötting"></div>
 </header>
 
 <div class="app-wrapper">
 
   <!-- Profile -->
   <div class="profile-strip">
-    <img src="assets/logo-dirk.jpg" class="profile-avatar" alt="Dr. Dirk Kötting">
+    <img src="assets/dirk-portrait.jpg" class="profile-avatar" alt="Dr. Dirk Kötting">
     <div class="profile-info">
       <strong>Dr. Dirk Kötting</strong>
       <span id="profileSubtitle">IT Governance · AI Policy · KI-Entscheidungssicherheit</span>
