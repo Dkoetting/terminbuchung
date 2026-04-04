@@ -50,7 +50,7 @@ header {
   display:flex; align-items:center;
 }
 .logo-left  { height:42px; max-width:160px; object-fit:contain; display:block; }
-.logo-right { height:44px; width:44px; object-fit:cover; display:block; border-radius:50%; border:2px solid rgba(255,255,255,0.3); }
+.logo-right { height:48px; width:48px; object-fit:contain; display:block; mix-blend-mode:screen; filter:brightness(3) contrast(0.9); }
 
 /* ─── WRAPPER ─── */
 .app-wrapper { position:relative; z-index:1; max-width:940px; margin:0 auto; padding:44px 20px 80px; }
@@ -84,8 +84,17 @@ header {
   border:1px solid rgba(37,99,235,0.2); border-radius:100px;
   padding:4px 14px; margin-bottom:18px;
 }
+.hero-row {
+  display:flex; align-items:center; gap:32px; margin-bottom:36px;
+}
+.hero-text { flex:1; }
+.hero-portrait {
+  width:140px; height:140px; border-radius:16px; object-fit:cover;
+  border:3px solid var(--border); box-shadow:0 4px 20px rgba(30,58,138,0.1);
+  flex-shrink:0;
+}
 .hero-title { font-size:clamp(24px,3.5vw,38px); font-weight:800; color:var(--dark); letter-spacing:-0.02em; line-height:1.2; margin-bottom:12px; }
-.hero-sub { font-size:15px; color:var(--muted); line-height:1.65; max-width:580px; margin-bottom:36px; }
+.hero-sub { font-size:15px; color:var(--muted); line-height:1.65; max-width:580px; }
 
 /* ─── MEETING TYPE CARDS ─── */
 .section-label { font-size:11px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:var(--muted); margin-bottom:12px; }
@@ -314,6 +323,8 @@ textarea.form-input { resize:vertical; min-height:90px; }
   header { padding:0 16px; }
   .logo-left { height:34px; } .logo-right { height:22px; }
   .app-wrapper { padding:28px 14px 60px; }
+  .hero-row { flex-direction:column; text-align:center; gap:20px; }
+  .hero-portrait { width:110px; height:110px; order:-1; }
   .path-selector { grid-template-columns:1fr; }
   .form-row { grid-template-columns:1fr; }
   .modal-form-row { grid-template-columns:1fr; }
@@ -334,7 +345,7 @@ textarea.form-input { resize:vertical; min-height:90px; }
     <button class="lang-btn active" id="btnDE" onclick="setLang('de')">DE</button>
     <button class="lang-btn" id="btnEN" onclick="setLang('en')">EN</button>
   </div>
-  <div class="logo-box"><img src="assets/dirk-portrait.jpg" class="logo-right" alt="Dr. Dirk Kötting"></div>
+  <div class="logo-box"><img src="assets/logo-dirk.jpg" class="logo-right" alt="Dr. DirKInstitute"></div>
 </header>
 
 <div class="app-wrapper">
@@ -353,9 +364,14 @@ textarea.form-input { resize:vertical; min-height:90px; }
   </div>
 
   <!-- Hero -->
-  <div class="hero-tag" id="heroTag">KI Governance · Entscheidungssicherheit</div>
-  <h1 class="hero-title" id="heroTitle">Wählen Sie den<br>passenden Einstieg</h1>
-  <p class="hero-sub" id="heroSub">Nicht jedes Thema braucht sofort einen Termin. Wählen Sie, was für Sie gerade passt.</p>
+  <div class="hero-row">
+    <div class="hero-text">
+      <div class="hero-tag" id="heroTag">KI Governance · Entscheidungssicherheit</div>
+      <h1 class="hero-title" id="heroTitle">Wählen Sie den<br>passenden Einstieg</h1>
+      <p class="hero-sub" id="heroSub">Nicht jedes Thema braucht sofort einen Termin. Wählen Sie, was für Sie gerade passt.</p>
+    </div>
+    <img src="assets/dirk-portrait.jpg" class="hero-portrait" alt="Dr. Dirk Kötting">
+  </div>
 
   <!-- Meeting type cards -->
   <div class="section-label" data-i18n="sectionLabel">Gesprächsformat wählen</div>
