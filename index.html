@@ -4,6 +4,18 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Dr. Dirk Kötting – Terminbuchung</title>
+<meta name="description" content="30 Minuten Klartext mit Dr. Dirk Kötting, Interim Manager für IT-Governance und Service Management: Lage, Risiken und nächste Schritte einordnen, ohne Standardpräsentation.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://termin.dr-dirkinstitute.org/">
+<meta property="og:title" content="30 Minuten Klartext: Termin buchen">
+<meta property="og:description" content="Sie führen eine neue Struktur ein und die Organisation zieht nicht mit? Wir ordnen Lage, Risiken und nächste Schritte ein, ohne Standardpräsentation.">
+<meta property="og:image" content="https://termin.dr-dirkinstitute.org/assets/og-termin.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="627">
+<meta property="og:image:alt" content="30 Minuten Klartext mit Dr. Dirk Kötting: Termin buchen">
+<meta property="og:locale" content="de_DE">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://termin.dr-dirkinstitute.org/assets/og-termin.png">
 <link rel="icon" type="image/png" href="assets/favicon.png">
 <style>
 :root {
@@ -476,7 +488,7 @@ body.splash-active { overflow:hidden; }
       <img src="assets/dirk-portrait.jpg" alt="Dr. Dirk Kötting">
       <div class="splash-portrait-badge">
         <strong>Dr. Dirk Kötting</strong>
-        <span>KI-Governance · IT-Sicherheit · Entscheidungssicherheit</span>
+        <span>Interim Manager · IT-Governance · Service Management</span>
       </div>
     </div>
 
@@ -497,8 +509,8 @@ body.splash-active { overflow:hidden; }
       </div>
 
       <div class="splash-points">
-        <div class="splash-point">KI-Governance, regulatorische Einordnung und Entscheidungssicherheit für Ihr Unternehmen.</div>
-        <div class="splash-point">Flexible Terminwahl – vom 30-Minuten-Impuls bis zur strategischen 90-Minuten-Session.</div>
+        <div class="splash-point">Interim Management für IT-Governance und Service Management, damit neue Strukturen im Alltag tragen.</div>
+        <div class="splash-point">Flexible Terminwahl, von 30 Minuten Klartext bis zur 60-Minuten-Session.</div>
       </div>
 
       <div class="splash-footer">
@@ -533,7 +545,7 @@ body.splash-active { overflow:hidden; }
     <img src="assets/logo-dirk.jpg" class="profile-avatar" alt="Dr. DirKInstitute">
     <div class="profile-info">
       <strong>Dr. Dirk Kötting</strong>
-      <span id="profileSubtitle">IT Governance · AI Policy · KI-Entscheidungssicherheit</span>
+      <span id="profileSubtitle">Interim Manager für IT-Governance und Service Management</span>
     </div>
     <div class="avail-badge">
       <span class="avail-dot loading" id="syncDot"></span>
@@ -544,7 +556,7 @@ body.splash-active { overflow:hidden; }
   <!-- Hero -->
   <div class="hero-row">
     <div class="hero-text">
-      <div class="hero-tag" id="heroTag">KI Governance · Entscheidungssicherheit</div>
+      <div class="hero-tag" id="heroTag">Die Technik ist live. Die Organisation nicht.</div>
       <h1 class="hero-title" id="heroTitle">Wählen Sie den<br>passenden Einstieg</h1>
       <p class="hero-sub" id="heroSub">Nicht jedes Thema braucht sofort einen Termin. Wählen Sie, was für Sie gerade passt.</p>
     </div>
@@ -872,6 +884,10 @@ function setLang(l) {
     document.getElementById('timeslotsHeader').innerHTML = `<h3>${t.timeslotsTitle}</h3><p>${t.timeslotsSub}</p>`;
     document.getElementById('timeslotsList').innerHTML = `<div class="no-slots">${t.noSlots}</div>`;
   }
+  // Update hero tag and profile subtitle for active mode
+  const m = MODES[currentMode];
+  document.getElementById('heroTag').textContent = l==='en' ? (m.tag_en||m.tag) : m.tag;
+  document.getElementById('profileSubtitle').textContent = l==='en' ? (m.subtitle_en||m.subtitle) : m.subtitle;
   // Update hero for active mode
   if(currentMode === 'gpt-vault') {
     document.getElementById('heroTitle').innerHTML = t.gptTitle;
@@ -906,20 +922,21 @@ function generateSlotsFromBlocks(blocks) {
 
 const MODES = {
   default: {
-    tag:'KI Governance · Entscheidungssicherheit', tag_en:'AI Governance · Decision Confidence',
-    subtitle:'IT Governance · AI Policy · KI-Entscheidungssicherheit', subtitle_en:'IT Governance · AI Policy · AI Decision Security',
+    tag:'Die Technik ist live. Die Organisation nicht.', tag_en:'Technology is live. The organisation is not.',
+    subtitle:'Interim Manager für IT-Governance und Service Management', subtitle_en:'Interim Manager for IT Governance and Service Management',
     meetingTypes:[
-      {id:'governance', name:'AI Governance Briefing',     name_en:'AI Governance Briefing',    duration:30, desc:'Regulatorische Orientierung & Status-Check',           desc_en:'Regulatory orientation & status check'},
-      {id:'strategie',  name:'KI-Strategiegespräch',       name_en:'AI Strategy Meeting',        duration:45, desc:'Entscheidungsanalyse mit Handlungsempfehlungen',         desc_en:'Decision analysis with action recommendations'},
-      {id:'policy',     name:'Policy & Compliance Review', name_en:'Policy & Compliance Review', duration:60, desc:'EU AI Act & Governance-Standards Tiefenprüfung',         desc_en:'EU AI Act & Governance standards deep review'}
+      {id:'governance', name:'30 Minuten Klartext',        name_en:'30 Minutes Straight Talk',   duration:30, desc:'Lage, Risiken und nächste Schritte einordnen',            desc_en:'Assess situation, risks and next steps'},
+      {id:'strategie',  name:'Mandatsgespräch Interim',    name_en:'Interim Engagement Meeting', duration:45, desc:'Ausgangslage, Rolle und Rahmen eines Interim-Mandats klären', desc_en:'Clarify situation, role and scope of an interim engagement'},
+      {id:'policy',     name:'Regulierung im Betrieb',     name_en:'Regulation in Operations',   duration:60, desc:'ISO 27001, NIS2, KRITIS und EU AI Act in Rollen und Prozesse übersetzen', desc_en:'Translate ISO 27001, NIS2, KRITIS and EU AI Act into roles and processes'}
     ],
     topics:[
+      {value:'Interim Management',             label:'Interim Management',     label_en:'Interim Management'},
+      {value:'IT Governance / ISMS',           label:'IT Governance / ISMS',   label_en:'IT Governance / ISMS'},
+      {value:'IT Service Management',          label:'IT Service Management',  label_en:'IT Service Management'},
+      {value:'Sourcing / Transitions',         label:'Sourcing / Transitions', label_en:'Sourcing / Transitions'},
       {value:'AI Governance Beratung',         label:'AI Governance',          label_en:'AI Governance'},
       {value:'EU AI Act Compliance',           label:'EU AI Act',               label_en:'EU AI Act'},
       {value:'K² Kausale Kompetenz Gespräch',  label:'K² Kausal-Kompetenz',    label_en:'K² Causal Competence'},
-      {value:'IT Governance / ISMS',           label:'IT Governance / ISMS',   label_en:'IT Governance / ISMS'},
-      {value:'Interim Management',             label:'Interim Management',     label_en:'Interim Management'},
-      {value:'Sourcing / Transitions',         label:'Sourcing / Transitions', label_en:'Sourcing / Transitions'},
       {value:'Keynote',                        label:'Keynote',                label_en:'Keynote'},
       {value:'Sparring',                       label:'Sparring',               label_en:'Sparring'},
       {value:'Sonstiges',                      label:'Sonstiges',              label_en:'Other'}
